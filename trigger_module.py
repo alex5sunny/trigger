@@ -97,12 +97,12 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 response_dic = {'triggers': trigger_dic,
                                 'actions': deepcopy(action_names_dic0)}
                 actions_dic = get_actions_settings()
-                logger.debug(f'actions_dic:{actions_dic}')
+                # logger.debug(f'actions_dic:{actions_dic}')
                 sms_dic = {sms_id: actions_dic[sms_id]['name'] for sms_id in actions_dic 
                            if sms_id > 3}
-                logger.debug(f'sms_dic:{sms_dic}')
+                # logger.debug(f'sms_dic:{sms_dic}')
                 response_dic['actions'].update(sms_dic)
-                logger.debug(f'from response_dic:{response_dic["actions"]}')
+                # logger.debug(f'from response_dic:{response_dic["actions"]}')
             if path == 'apply':
                 response_dic = {'apply': 1}
                 glob.restart = True
