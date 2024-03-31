@@ -101,7 +101,7 @@ class TriggerWrapper:
         self.freqmax = freqmax
         self.init_level = init_level
         self.stop_level = stop_level
-        self.trigger_on = False
+        self.trigger_on = None
         self.sta = sta
         self.lta = lta
         self.sample_rate = self.data_trigger = self.filter = None
@@ -139,6 +139,10 @@ class TriggerWrapper:
 
         date_time = starttime
         # message_start = Subscription.trigger.value + self.trigger_index_s
+        if self.trigger_on is None:
+            self.trigger_on = activ_data[0]
+            if self.trigger_on:
+                triggerings.append([date_time, int(self.trigger_on), self.trigger_index])
         while True:
             if self.trigger_on:
                 seek_ar = np.where(deactiv_data)[0]
