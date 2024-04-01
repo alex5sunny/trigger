@@ -1,5 +1,6 @@
 import inspect
 import os
+from collections import defaultdict
 
 from lxml import etree
 
@@ -79,11 +80,35 @@ def get_sources_settings():
         src_dic[station] = {}
         src_dic[station]['host'] = row[host_col][0].attrib['value'].strip()
         src_dic[station]['port'] = int(row[port_col][0].attrib['value'].strip())
-        src_dic[station]['stream'] = row[stream_col][0].attrib['value'].strip()
+        src_dic[station]['stream'] = row[stream_col][0].text.strip()
         src_dic[station]['out_port'] = int(row[outport_col][0].attrib['value'].strip())
         src_dic[station]['channels'] = row[channels_col].text.split(' ')
         src_dic[station]['units'] = row[units_col].text.strip()
     return src_dic
+
+
+def get_streams_dict():
+    src_dict = get_sources_settings()
+    streams_dict = defaultdict(dict)
+    for station, station_dic in src_dict.items():
+        ke = (station_dic['host'], station_dic['port'])
+        stream = station_dic['stream']
+        if stream not in streams_dict[ke]:
+            streams_dict[ke][stream] = None
+    return streams_dict
+
+
+def get_station_name(port: int, st_name: str, names: set) -> str:
+    station0 = f'N{str(port)[-1]}{st_name[:2].upper()}'
+    if station0 not in names:
+        return station0
+    n = len(station0)
+    for i in range(1, 100):
+        istr = str(i)
+        station = station0[:n - len(istr)] + istr
+        if station not in names:
+            return station
+    raise Exception('cannot generate source name')
 
 
 def set_source_channels(station, channels, units='V'):
