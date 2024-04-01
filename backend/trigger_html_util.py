@@ -80,26 +80,25 @@ def get_sources_settings():
         src_dic[station] = {}
         src_dic[station]['host'] = row[host_col][0].attrib['value'].strip()
         src_dic[station]['port'] = int(row[port_col][0].attrib['value'].strip())
-        src_dic[station]['stream'] = row[stream_col][0].text.strip()
+        src_dic[station]['stream'] = row[stream_col].text.strip()
         src_dic[station]['out_port'] = int(row[outport_col][0].attrib['value'].strip())
         src_dic[station]['channels'] = row[channels_col].text.split(' ')
         src_dic[station]['units'] = row[units_col].text.strip()
     return src_dic
 
 
-def get_streams_dict():
+def get_streams_dict(host: str, port: int) -> dict:
     src_dict = get_sources_settings()
     streams_dict = defaultdict(dict)
     for station, station_dic in src_dict.items():
-        ke = (station_dic['host'], station_dic['port'])
         stream = station_dic['stream']
-        if stream not in streams_dict[ke]:
-            streams_dict[ke][stream] = None
+        if host == station_dic['host'] and port == station_dic['port'] and stream not in streams_dict:
+            streams_dict[stream] = station_dic['out_port']
     return streams_dict
 
 
-def get_station_name(port: int, st_name: str, names: set) -> str:
-    station0 = f'N{str(port)[-1]}{st_name[:2].upper()}'
+def get_station_name(port: int, stream: str, names: set) -> str:
+    station0 = f'N{str(port)[-1]}{stream[:2].upper()}'
     if station0 not in names:
         return station0
     n = len(station0)
@@ -109,6 +108,10 @@ def get_station_name(port: int, st_name: str, names: set) -> str:
         if station not in names:
             return station
     raise Exception('cannot generate source name')
+
+
+def set_source_streams(host: str, port: str, streams_dict: dict):
+    pass
 
 
 def set_source_channels(station, channels, units='V'):
@@ -192,6 +195,8 @@ def save_rules(post_data_str):
 def save_actions(post_data_str):
     save_pprint(post_data_str, os.path.split(inspect.getfile(backend))[0] + '/actions.html')
 
+
+print(str(get_streams_dict()))
 
 # print(str(getTriggerParams()))
 
