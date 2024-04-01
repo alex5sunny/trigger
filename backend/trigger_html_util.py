@@ -115,33 +115,32 @@ def set_source_streams(host: str, port: str, streams_dict: dict, prev_dict: dict
     fpath = os.path.split(inspect.getfile(backend))[0] + '/sources.html'
     root = etree.parse(fpath)
     headers_dic = getHeaderDic(root)
-    rows = root.xpath('/html/body/table/tbody/tr')
-    table = rows[0].getparent()
-    row = deepcopy(rows[1])
+    table = root.xpath('/html/body/table/tbody')[0]
+    row = deepcopy(table[1])
     i = 1
     j = None
-    while i < len(rows):
-        if host != rows[i][headers_dic['host']][0].attrib['value'] or \
-                port != int(rows[i][headers_dic['port']][0].attrib['value']):
+    while i < len(table):
+        if host != table[i][headers_dic['host']][0].attrib['value'] or \
+                port != int(table[i][headers_dic['port']][0].attrib['value']):
             i += 1
             continue
         if not j:
             j = i
-        print('table:\n', etree.tostring(table), '\nrow:\n', etree.tostring(rows[i]))
-        table.remove(rows[i])
+        # print('table:\n', etree.tostring(table), '\nrow:\n', etree.tostring(table[i]))
+        table.remove(table[i])
     for stream, (channels, units) in streams_dict.items():
         if stream in prev_dict:
             station, outport = prev_dict[stream]
         else:
-            names = {row[headers_dic['station']][0].attrib['value'] for row in rows[1:]}
+            names = {row[headers_dic['station']][0].attrib['value'] for row in table[1:]}
             station = get_station_name(port, stream, names)
-            outport = 1 + max([int(row[headers_dic['out port']][0].attrib['value']) for row in rows[1:]])
+            outport = 1 + max([int(row[headers_dic['out port']][0].attrib['value']) for row in table[1:]])
         row = deepcopy(row)
         row[headers_dic['station']][0].attrib['value'] = station
         row[headers_dic['host']][0].attrib['value'] = host
         row[headers_dic['port']][0].attrib['value'] = str(port)
         row[headers_dic['stream']].text = stream
-        row[headers_dic['out port']].text = str(outport)
+        row[headers_dic['out port']][0].attrib['value'] = str(outport)
         row[headers_dic['channels']].text = ' '.join(channels)
         row[headers_dic['units']].text = units
         table.insert(j, row)
@@ -231,15 +230,15 @@ def save_actions(post_data_str):
     save_pprint(post_data_str, os.path.split(inspect.getfile(backend))[0] + '/actions.html')
 
 
-def test_streams():
-    host = 'localhost'
-    port = 10000
-    prev_dict = get_prev_dict(host, port)
-    streams_dict = {'main': (list('123456'), 'V'), 'env': (list('123'), 'A')}
-    set_source_streams(host, port, streams_dict, prev_dict)
-
-
-test_streams()
+# def test_streams():
+#     host = 'localhost'
+#     port = 10000
+#     prev_dict = get_prev_dict(host, port)
+#     streams_dict = {'main': (list('123456'), 'V'), 'env': (list('123'), 'A')}
+#     set_source_streams(host, port, streams_dict, prev_dict)
+#
+#
+# test_streams()
 
 # print(str(getTriggerParams()))
 
