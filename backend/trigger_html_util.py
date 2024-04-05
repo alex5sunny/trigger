@@ -129,10 +129,12 @@ def set_source_streams(host: str, port: str, streams_dict: dict, prev_dict: dict
         # print('table:\n', etree.tostring(table), '\nrow:\n', etree.tostring(table[i]))
         table.remove(table[i])
     for stream, (channels, units) in streams_dict.items():
+        names = {row[headers_dic['station']][0].attrib['value'] for row in table[1:]}
         if stream in prev_dict:
             station, outport = prev_dict[stream]
+            if not station:
+                station = get_station_name(port, stream, names)
         else:
-            names = {row[headers_dic['station']][0].attrib['value'] for row in table[1:]}
             station = get_station_name(port, stream, names)
             outport = 1 + max([int(row[headers_dic['out port']][0].attrib['value']) for row in table[1:]])
         row = deepcopy(row)

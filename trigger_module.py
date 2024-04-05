@@ -20,7 +20,7 @@ from main_prot import rename_packet
 
 from backend.trigger_html_util import getTriggerParams, \
     save_triggers, save_sources, save_rules, save_actions, \
-    get_actions_settings, get_rules_settings, get_sources_settings, set_source_channels
+    get_actions_settings, get_rules_settings, get_sources_settings, set_source_streams
 from detector.misc.globals import action_names_dic0, ActionType, ConnState
 
 from detector.action.action_process import exec_actions
@@ -206,19 +206,31 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                     check_time = cur_time
                     glob.CONN_STATE = ConnState.CONNECTED
                     for conn_name, dev_packets in packets_data.items():
-                        station = conn_name.split(':')[1]
+                        # station = conn_name.split(':')[1]
+                        host, port = conn_name.split(':')[-2:]
+                        if host == '127.0.0.1':
+                            host = 'localhost'
+                        port = int(port)
                         for packet_type, content in dev_packets.items():
                             # if 'parameters' == packet_type:
                             #     logger.debug(f'parameters recvd:\n{content}')
-                            packet_type, content = rename_packet(
-                                packet_type,
-                                content,
-                                station,
-                                sources[station]['stream']
-                            )
-                            if not content:
-                                continue
+                            # packet_type, content = rename_packet(
+                            #     packet_type,
+                            #     content,
+                            #     station,
+                            #     sources[station]['stream']
+                            # )
+                            # if not content:
+                            #     continue
                             if 'parameters' == packet_type:
+                                streams_dict = {stream: (list(stdata['channels'].keys()), 'V')
+                                                for stream, stdata in content['streams'].items()}
+                                prev_dict = {station_dic['stream']: (station, station_dic['out port'])
+                                             for station, station_dic in sources.items()
+                                             if host == station_dic['host'] and port == station_dic['port']}
+                                set_source_streams(host, port, streams_dict, prev_dict)
+                                sources = get_sources_settings()
+                                continue
                                 # logger.debug(f'parameters filtered:\n{content}')
                                 streamer_params = {'init_packet': {'parameters': content.copy()},
                                                    'ringbuffer_size': 10}
@@ -230,14 +242,14 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 station_data = content['streams'][station]
                                 sample_rates[station] = station_data['sample_rate']
                                 chans = list(station_data['channels'].keys())
-                                # logger.debug(f'chans from parameters:{chans}')
-                                set_source_channels(station, chans)
+                                # set_source_channels(station, chans)
                                 for chan in chans:
                                     ks[station][chan] = \
                                         station_data['channels'][chan]['counts_in_volt']
                                 for trigger_list in triggers[station].values():
                                     for trigger in trigger_list:
                                         trigger.set_sample_rate(sample_rates[station])
+                            continue
                             if 'streams' == packet_type and ks[station]:
                                 packets_q.append({packet_type: content})
                                 starttime = UTCDateTime(content[station]['timestamp'])
