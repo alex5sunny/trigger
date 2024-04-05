@@ -144,7 +144,7 @@ def worker(njsp):
 
 def rename_packet(packet_type, content, station, target_stream):
     if 'streams' == packet_type:
-        # content = deepcopy(content)
+        content = deepcopy(content)
         if target_stream not in content:
             return None, None
         stream_names = list(content.keys())
