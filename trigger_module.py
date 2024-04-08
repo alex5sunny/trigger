@@ -228,11 +228,12 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 q_interm.extend(split_streams(content, station_for_stream))
                         for packet_type, content in q_interm:
                             if 'parameters' == packet_type:
+                                station = next(iter(content['streams']))
                                 streamer_params = {'init_packet': {'parameters': content.copy()},
                                                    'ringbuffer_size': 10}
                                 if station not in streamers:
                                     streamers[station] = \
-                                        self.njsp.add_streamer('', sources[station]['out_port'], streamer_params)
+                                        self.njsp.add_streamer('', sources[station]['out port'], streamer_params)
                                 station_data = content['streams'][station]
                                 sample_rates[station] = station_data['sample_rate']
                                 chans = list(station_data['channels'].keys())
@@ -243,6 +244,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                     for trigger in trigger_list:
                                         trigger.set_sample_rate(sample_rates[station])
                             if 'streams' == packet_type:
+                                station = next(iter(content))
                                 packets_q.append({packet_type: content})
                                 starttime = UTCDateTime(content[station]['timestamp'])
                                 channels_data = content[station]['samples']
