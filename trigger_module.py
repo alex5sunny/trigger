@@ -14,9 +14,9 @@ from obspy import UTCDateTime
 sys.path.append(os.path.dirname(__file__))
 
 import detector.misc.globals as glob
+from detector.misc.misc_util import get_station_for_stream, split_params, split_streams
 from detector.action.action_pipe import execute_action
 from detector.filter_trigger.construct_triggers import construct_triggers
-from main_prot import rename_packet
 
 from backend.trigger_html_util import getTriggerParams, \
     save_triggers, save_sources, save_rules, save_actions, \
@@ -211,17 +211,8 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                         if host == '127.0.0.1':
                             host = 'localhost'
                         port = int(port)
+                        q_interm = []
                         for packet_type, content in dev_packets.items():
-                            # if 'parameters' == packet_type:
-                            #     logger.debug(f'parameters recvd:\n{content}')
-                            # packet_type, content = rename_packet(
-                            #     packet_type,
-                            #     content,
-                            #     station,
-                            #     sources[station]['stream']
-                            # )
-                            # if not content:
-                            #     continue
                             if 'parameters' == packet_type:
                                 streams_dict = {stream: (list(stdata['channels'].keys()), 'V')
                                                 for stream, stdata in content['streams'].items()}
@@ -230,27 +221,28 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                              if host == station_dic['host'] and port == station_dic['port']}
                                 set_source_streams(host, port, streams_dict, prev_dict)
                                 sources = get_sources_settings()
-                                continue
-                                # logger.debug(f'parameters filtered:\n{content}')
+                                station_for_stream = get_station_for_stream(host, port, sources)
+                                q_interm.extend(split_params(content, station_for_stream))
+                            if 'streams' == packet_type:
+                                station_for_stream = get_station_for_stream(host, port, sources)
+                                q_interm.extend(split_streams(content, station_for_stream))
+                        for packet_type, content in q_interm:
+                            if 'parameters' == packet_type:
                                 streamer_params = {'init_packet': {'parameters': content.copy()},
                                                    'ringbuffer_size': 10}
                                 if station not in streamers:
                                     streamers[station] = \
-                                        self.njsp.add_streamer('', 
-                                                               sources[station]['out_port'],
-                                                               streamer_params)
+                                        self.njsp.add_streamer('', sources[station]['out_port'], streamer_params)
                                 station_data = content['streams'][station]
                                 sample_rates[station] = station_data['sample_rate']
                                 chans = list(station_data['channels'].keys())
-                                # set_source_channels(station, chans)
                                 for chan in chans:
                                     ks[station][chan] = \
                                         station_data['channels'][chan]['counts_in_volt']
                                 for trigger_list in triggers[station].values():
                                     for trigger in trigger_list:
                                         trigger.set_sample_rate(sample_rates[station])
-                            continue
-                            if 'streams' == packet_type and ks[station]:
+                            if 'streams' == packet_type:
                                 packets_q.append({packet_type: content})
                                 starttime = UTCDateTime(content[station]['timestamp'])
                                 channels_data = content[station]['samples']

@@ -111,7 +111,7 @@ def get_station_name(port: int, stream: str, names: set) -> str:
     raise Exception('cannot generate source name')
 
 
-def set_source_streams(host: str, port: str, streams_dict: dict, prev_dict: dict):
+def set_source_streams(host: str, port: int, streams_dict: dict, prev_dict: dict):
     fpath = os.path.split(inspect.getfile(backend))[0] + '/sources.html'
     root = etree.parse(fpath)
     headers_dic = getHeaderDic(root)
@@ -147,16 +147,6 @@ def set_source_streams(host: str, port: str, streams_dict: dict, prev_dict: dict
         row[headers_dic['units']].text = units
         table.insert(j, row)
         j += 1
-    root.write(fpath)
-
-
-def set_source_channels(station, channels, units='V'):
-    fpath = os.path.split(inspect.getfile(backend))[0] + '/sources.html'
-    root = etree.parse(fpath)
-    headers_dic = getHeaderDic(root)
-    cell_path = "//tr[td/input/@value='" + station + "']/td"
-    root.xpath(cell_path)[headers_dic['channels']].text = ' '.join(channels)
-    root.xpath(cell_path)[headers_dic['units']].text = units
     root.write(fpath)
 
 

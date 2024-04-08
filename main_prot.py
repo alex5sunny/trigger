@@ -82,7 +82,7 @@ def worker(njsp):
                 for conn_name, dev_packets in packets_data.items():
                     station = conn_name.split(':')[1]
                     for packet_type, content in dev_packets.items():
-                        packet_type, content = rename_packet(packet_type, content, station)
+                        packet_type, content = split_packet(packet_type, content, station)
                         if 'parameters' == packet_type and station not in streamers:
                             streamer_params = {'init_packet': {'parameters': content.copy()},
                                                'ringbuffer_size': 10}
@@ -140,26 +140,4 @@ def worker(njsp):
             njsp.remove(conn)
         while set(conns) & set(njsp.handles):
             sleep(.1)
-
-
-def rename_packet(packet_type, content, station, target_stream):
-    if 'streams' == packet_type:
-        content = deepcopy(content)
-        if target_stream not in content:
-            return None, None
-        stream_names = list(content.keys())
-        content[station] = content[target_stream]
-        for stream_name in stream_names:
-            del content[stream_name]
-    if 'parameters' == packet_type:
-        content = deepcopy(content)
-        if target_stream not in content['streams']:
-            return None, None
-        stream_names = list(content['streams'])
-        content['streams'][station] = content['streams'][target_stream]
-        for stream_name in stream_names:
-            del content['streams'][stream_name]
-    return packet_type, content
-
-
 
