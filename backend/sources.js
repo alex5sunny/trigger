@@ -23,6 +23,9 @@ function apply_save() {
 		}
 	}
     sendHTML();
+	setTimeout(function()	{
+		location.reload();
+	}, 5000);
 }
 
 function sendHTML() {
