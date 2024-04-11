@@ -2,6 +2,7 @@ from obspy import UTCDateTime
 from detector.action.action_pipe import execute_action
 from detector.misc.globals import ActionType, logger
 import detector.misc.globals as glob
+from detector.misc.misc_util import get_packet_for_log
 
 
 def exec_actions(actions_triggerings, packets_q, njsp, sample_rates, counters, pet_times,

@@ -172,12 +172,16 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             rules_settings = get_rules_settings()
 
             sources = get_sources_settings()
+            visited = set()
             for station in sources:
                 njsp_params = deepcopy(base_params)
                 njsp_params['handshake']['client_name'] = station
                 conn_data = sources[station]
-                readers[station] = self.njsp.add_reader(conn_data['host'], int(conn_data['port']), station,
-                                                        njsp_params, njsp_queue)
+                host = conn_data['host']
+                port = int(conn_data['port'])
+                if (host, port) not in visited:
+                    readers[station] = self.njsp.add_reader(host, port, station, njsp_params, njsp_queue)
+                visited.add((host, port))
 
             glob.TEST_TRIGGERINGS = {}
             actions_settings = get_actions_settings()

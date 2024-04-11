@@ -1,5 +1,4 @@
 import time
-from collections import defaultdict
 from copy import deepcopy
 
 from obspy import UTCDateTime
@@ -66,33 +65,24 @@ def get_station_for_stream(host: str, port: int, sources: dict) -> dict:
 
 
 def split_params(content: dict, station_for_stream: dict) -> list:
-    return [('parameters', {'streams': {station_for_stream[stream]: stream_data}})
-            for stream, stream_data in content['streams'].items()]
+    out = []
+    for stream, stream_data in content['streams'].items():
+        content_out = deepcopy(content)
+        content_out['streams'] = {station_for_stream[stream]: stream_data}
+        out.append(('parameters', content_out))
+    return out
 
 
 def split_streams(content: dict, station_for_stream: dict) -> list:
     return [('streams', {station_for_stream[stream]: stream_data}) for stream, stream_data in content.items()]
 
-    if 'streams' == packet_type:
-        if target_stream not in content:
-            return None, None
-        stream_names = list(content.keys())
-        content[station] = content[target_stream]
-        for stream_name in stream_names:
-            del content[stream_name]
-    if 'parameters' == packet_type:
-        if target_stream not in content['streams']:
-            return None, None
-        stream_names = list(content['streams'])
-        content['streams'][station] = content['streams'][target_stream]
-        for stream_name in stream_names:
-            del content['streams'][stream_name]
-    return packet_type, content
 
-
-def f_empty():
-    while True:
-        time.sleep(2)
+def get_packet_for_log(content: dict) -> dict:
+    content_log = deepcopy(content)
+    for stream in content_log['streams']:
+        for ch in content_log['streams'][stream]['samples']:
+            content_log['streams'][stream]['samples'][ch] = len(content_log['streams'][stream]['samples'][ch])
+    return content_log
 
 
 # def get_channels(context, stations_set):
