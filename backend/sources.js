@@ -45,15 +45,31 @@ function genPort(colNum)	{
 	return 1 + Math.max(...ports)
 }
 
+function genName()	{
+	if (names.has(name))	{
+		var newName;
+		for (var i = 2; i < 20; i++) {
+			newName = name.slice(0, 4 - ) + ('0' + i).slice(-2);
+			if (names.has(newName) == false)	{
+				name = newName;
+				break;
+			}
+		}
+	}
+	return name;
+}
+
 function addSource() {
     var table = document.getElementById("sourcesTable");
     var rows = table.rows;
     var len = rows.length
     var row = rows[len - 1].cloneNode(true);
-    row.cells[stationCol].children[0].setAttribute("value", "");
 	row.cells[portCol].children[0].setAttribute("value", genPort(portCol));
 	row.cells[outPortCol].children[0].setAttribute("value", genPort(outPortCol));
-    table.children[0].appendChild(row);
+	var name = genName();
+	row.cells[stationCol].children[0].setAttribute("value", name);
+	row.cells[stationCol].children[0].value = name;
+	table.children[0].appendChild(row);
 }
 
 function removeSource(row)	{

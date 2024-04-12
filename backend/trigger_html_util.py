@@ -7,7 +7,7 @@ from lxml import etree
 
 import backend
 from detector.filter_trigger.trigger_types import TriggerType
-from detector.misc.globals import ActionType
+from detector.misc.globals import ActionType, logger
 
 
 def getHeaderDic(root):
@@ -131,12 +131,15 @@ def set_source_streams(host: str, port: int, streams_dict: dict, prev_dict: dict
     for stream, (channels, units) in streams_dict.items():
         names = {row[headers_dic['station']][0].attrib['value'] for row in table[1:]}
         if stream in prev_dict:
+            logger.debug(f'stream {stream} in prev_dict')
             station, outport = prev_dict[stream]
             if not station:
                 station = get_station_name(port, stream, names)
         else:
+            logger.debug(f'stream {stream} not in prev_dict')
             station = get_station_name(port, stream, names)
             outport = 1 + max([int(row[headers_dic['out port']][0].attrib['value']) for row in table[1:]])
+        logger.debug(f'set station {station}')
         row = deepcopy(row)
         row[headers_dic['station']][0].attrib['value'] = station
         row[headers_dic['host']][0].attrib['value'] = host
