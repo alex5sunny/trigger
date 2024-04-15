@@ -16,7 +16,6 @@ var outPortCol = headersObj["out port"];
 
 function apply_save() {
 	checkNames();
-	return;
 	var rows = document.getElementById("sourcesTable").rows;
 	for (var row of Array.from(rows).slice(1))	{
 		for (var col of [stationCol, hostCol, portCol, outPortCol])	{
@@ -70,7 +69,13 @@ function checkNames()   {
 	var names = new Set();
 	for (var row of Array.from(rows).slice(1))	{
 	    var name = row.cells[stationCol].children[0].value;
-	    if (names.has(name))	{
+	    if (name == '' || names.has(name))	{
+			if (name == '')	{
+				name = genName(
+					row.cells[portCol].children[0].value, 
+					row.cells[streamCol].innerHTML
+				);
+			}
 			name = genCheckName(name, names);
 			row.cells[stationCol].children[0].setAttribute("value", name);
 			row.cells[stationCol].children[0].value = name;
@@ -85,10 +90,9 @@ function addSource() {
     var len = rows.length
     var row = rows[len - 1].cloneNode(true);
     var port = genPort(portCol);
-    var stream = row.cells[streamCol].innerHTML;
 	row.cells[portCol].children[0].setAttribute("value", port);
 	row.cells[outPortCol].children[0].setAttribute("value", genPort(outPortCol));
-	row.cells[stationCol].children[0].setAttribute("value", genName(port, stream));
+	row.cells[stationCol].children[0].setAttribute("value", "");
 	table.children[0].appendChild(row);
 }
 
