@@ -159,7 +159,6 @@ class TriggerWrapper:
             triggerings.append([date_time, int(self.trigger_on), self.trigger_index])
             logger.debug(f'triggered, trigger id:{self.trigger_index} trigger_type:{self.trigger_type.name}\n'
                          f'on:{self.trigger_on} max val:{max(trigger_data)} min val:{min(trigger_data)}\n'
-                         f'init level:{self.init_level} stop level:{self.stop_level}')
+                         f'init level:{self.init_level} stop level:{self.stop_level} triggering time:{date_time}')
         return triggerings
-            #self.socket_trigger.send(message_start + btrig + date_time._ns.to_bytes(8, byteorder='big'))
 

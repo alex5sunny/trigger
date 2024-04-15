@@ -23,7 +23,7 @@ from backend.trigger_html_util import getTriggerParams, \
     get_actions_settings, get_rules_settings, get_sources_settings, set_source_streams
 from detector.misc.globals import action_names_dic0, ActionType, ConnState
 
-from detector.action.action_process import exec_actions
+from detector.action.action_process import exec_actions, post_actions
 from detector.filter_trigger.rule import rule_picker
 from detector.misc.misc_util import fill_out_triggerings, append_test_triggerings, \
     to_actions_triggerings, group_triggerings
@@ -278,8 +278,8 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                     logger.debug(f'test triggerings:{glob.TEST_TRIGGERINGS}')
                 append_test_triggerings(actions_triggerings, glob.TEST_TRIGGERINGS)
                 # logger.debug(f'actions triggerings:{actions_triggerings}')
-                exec_actions(actions_triggerings, packets_q, self.njsp, sample_rates, counters,
-                             pet_times, actions_settings, streamers)
+                exec_actions(actions_triggerings, counters, pet_times, actions_settings)
+                post_actions(packets_q, self.njsp, sample_rates, counters, pet_times, actions_settings, streamers)
                 triggerings.clear()
                 rules_triggerings.clear()
                 actions_triggerings.clear()

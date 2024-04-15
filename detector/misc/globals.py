@@ -25,7 +25,7 @@ logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.getLogger("gpsd").setLevel(logging.WARNING)
 
 CONNECTION_TOUT = 5000
-PBUF_SIZE = 200
+PBUF_SIZE = 500
 ENCODING = 'cp1250'
 
 pem_time = 0
