@@ -19,9 +19,9 @@
 					</td>
 					<td style="display: none;" wfd-invisible="true">2</td>
 					<td>
-						<input value="levlX2" size="6"/></td>
+						<input value="levlC1" size="6"/></td>
 					<td>
-						<select onchange="stationChange(this)"><option>ND01</option><option selected="selected">NDXX</option></select></td>
+						<select onchange="stationChange(this)"><option selected="selected">NACC</option><option>NENV</option></select></td>
 					<td>
 						<select><option selected="selected">ch1</option><option>ch2</option><option>ch3</option><option>ch4</option><option>ch5</option><option>ch6</option></select></td>
 					<td>
@@ -31,9 +31,9 @@
 					<td contenteditable="true">
 						<input type="numeric" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
 					<td>
-						<input type="numeric" value="10" size="5" style="text-align: right;"/><output>V</output></td>
+						<input type="numeric" value="0.5" size="5" style="text-align: right;"/><output>V</output></td>
 					<td>
-						<input type="numeric" value="0.09" size="5" style="text-align: right;"/><output>V</output></td>
+						<input type="numeric" value="0.5" size="5" style="text-align: right;"/><output>V</output></td>
 					<td>
 						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
 					<td>
@@ -41,27 +41,83 @@
 					<td>
 						<input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
 					<td>
-						<img src="img\circle-green.jpg"/></td>
+						<img src="img\circle-gray.jpg"/></td>
 				</tr><tr><td>
 						<button type="button" style="color: red;" onclick="removeTrigger(this.parentNode.parentNode)">X</button>
 					</td>
 					<td style="display: none;" wfd-invisible="true">3</td>
 					<td>
-						<input value="rmsX2" size="6"/></td>
+						<input value="rmsC1" size="6"/></td>
 					<td>
-						<select onchange="stationChange(this)"><option selected="selected">ND01</option><option>NDXX</option></select></td>
+						<select onchange="stationChange(this)"><option selected="selected">NACC</option><option>NENV</option></select></td>
 					<td>
-						<select><option>ch1</option><option>ch2</option><option selected="selected">ch3</option><option>ch4</option><option>ch5</option><option>ch6</option></select></td>
+						<select><option selected="selected">ch1</option><option>ch2</option><option>ch3</option><option>ch4</option><option>ch5</option><option>ch6</option></select></td>
 					<td>
 						<select onchange="setUnits(this.parentNode.parentNode)"><option>sta_lta</option><option selected="selected">RMS</option><option>level</option></select></td>
 					<td>
-						<input type="numeric" value="10" size="2" style="text-align: right; display: inline;"/></td>
+						<input type="numeric" value="0.1" size="2" style="text-align: right; display: inline;"/></td>
 					<td contenteditable="true">
 						<input type="numeric" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
 					<td>
-						<input type="numeric" value="7" size="5" style="text-align: right;"/><output>V</output></td>
+						<input type="numeric" value="1.0005" size="5" style="text-align: right;"/><output>V</output></td>
 					<td>
-						<input type="numeric" value="0.09" size="5" style="text-align: right;"/><output>V</output></td>
+						<input type="numeric" value="1.0001" size="5" style="text-align: right;"/><output>V</output></td>
+					<td>
+						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
+					<td>
+						<input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
+					<td>
+						<input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
+					<td>
+						<img src="img\circle-gray.jpg"/></td>
+				</tr><tr><td>
+						<button type="button" style="color: red;" onclick="removeTrigger(this.parentNode.parentNode)">X</button>
+					</td>
+					<td style="display: none;" wfd-invisible="true">4</td>
+					<td>
+						<input value="rmsC12" size="6"/></td>
+					<td>
+						<select onchange="stationChange(this)"><option selected="selected">NACC</option><option>NENV</option></select></td>
+					<td>
+						<select><option selected="selected">ch1</option><option>ch2</option><option>ch3</option><option>ch4</option><option>ch5</option><option>ch6</option></select></td>
+					<td>
+						<select onchange="setUnits(this.parentNode.parentNode)"><option>sta_lta</option><option selected="selected">RMS</option><option>level</option></select></td>
+					<td>
+						<input type="numeric" value="0.2" size="2" style="text-align: right; display: inline;"/></td>
+					<td contenteditable="true">
+						<input type="numeric" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
+					<td>
+						<input type="numeric" value="1.0005" size="5" style="text-align: right;"/><output>V</output></td>
+					<td>
+						<input type="numeric" value="1.0001" size="5" style="text-align: right;"/><output>V</output></td>
+					<td>
+						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
+					<td>
+						<input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
+					<td>
+						<input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/></td>
+					<td>
+						<img src="img\circle-gray.jpg"/></td>
+				</tr><tr><td>
+						<button type="button" style="color: red;" onclick="removeTrigger(this.parentNode.parentNode)">X</button>
+					</td>
+					<td style="display: none;" wfd-invisible="true">5</td>
+					<td>
+						<input value="sltaC1" size="6"/></td>
+					<td>
+						<select onchange="stationChange(this)"><option selected="selected">NACC</option><option>NENV</option></select></td>
+					<td>
+						<select><option selected="selected">ch1</option><option>ch2</option><option>ch3</option><option>ch4</option><option>ch5</option><option>ch6</option></select></td>
+					<td>
+						<select onchange="setUnits(this.parentNode.parentNode)"><option selected="selected">sta_lta</option><option>RMS</option><option>level</option></select></td>
+					<td>
+						<input type="numeric" value="0.1" size="2" style="text-align: right; display: inline;"/></td>
+					<td contenteditable="true">
+						<input type="numeric" value="0.2" size="2" style="text-align: right; display: inline;" wfd-invisible="true"/></td>
+					<td>
+						<input type="numeric" value="1.9" size="5" style="text-align: right;"/><output/></td>
+					<td>
+						<input type="numeric" value="1.05" size="5" style="text-align: right;"/><output/></td>
 					<td>
 						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
 					<td>

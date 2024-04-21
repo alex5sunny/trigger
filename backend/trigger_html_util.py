@@ -138,7 +138,10 @@ def set_source_streams(host: str, port: int, streams_dict: dict, prev_dict: dict
         else:
             logger.debug(f'stream {stream} not in prev_dict')
             station = get_station_name(port, stream, names)
-            outport = 1 + max([int(row[headers_dic['out port']][0].attrib['value']) for row in table[1:]])
+            if len(table) == 1:
+                outport = 10011
+            else:
+                outport = 1 + max([int(row[headers_dic['out port']][0].attrib['value']) for row in table[1:]])
         logger.debug(f'set station {station}')
         row = deepcopy(row)
         row[headers_dic['station']][0].attrib['value'] = station

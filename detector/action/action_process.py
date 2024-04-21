@@ -28,6 +28,8 @@ def get_timing(streams_packet, sample_rates):
 
 
 def main_action(action_id, triggering, ttime, pet_times, counters, pem, pet, inverse, action_message, action_address):
+    if not triggering:
+        return
     counters[action_id] += triggering
     if counters[action_id] < 0:
         raise Exception('more detriggerings than triggerings')
@@ -43,11 +45,12 @@ def post_action(action_id: int, packets_q: list, pet_times: dict, counters: dict
                 inverse, action_message, action_address, njsp, sample_rates, streamers):
     if action_id == ActionType.send_SIGNAL.value:
         endtime = get_timing(packets_q[0], sample_rates)[0] if packets_q else None
-        while packets_q and endtime < pet_times[action_id]:
+        while packets_q and pet_times[action_id]:
             streams_packet = packets_q.pop(0)
             starttime, endtime = get_timing(streams_packet, sample_rates)
             station, = streams_packet['streams'].keys()
-            if endtime > glob.pem_time:
+            if endtime > glob.pem_time and starttime < pet_times[action_id]:
+                # logger.debug(f'starttime:{starttime} endtime:{endtime} station:{station}')
                 njsp.broadcast_data(streamers[station], streams_packet)
         if pet_times[action_id] and endtime and endtime > pet_times[action_id]:
             pet_times[action_id] = 0
