@@ -267,7 +267,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                     rules_triggerings.sort()
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings, actions_triggerings)
-                    actions_triggerings.sort()
+                    actions_triggerings.sort(key=lambda dtr: (dtr[0], -dtr[1], dtr[2]))
                     group_triggerings(triggerings, glob.USER_TRIGGERINGS, glob.LAST_TRIGGERINGS)
                     group_triggerings(rules_triggerings, glob.URULES_TRIGGERINGS, glob.LAST_RTRIGGERINGS)
                 except Empty:

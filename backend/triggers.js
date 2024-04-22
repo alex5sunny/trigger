@@ -93,8 +93,8 @@ function initPage() {
 				var ltaNode = row.cells[ltaCol].children[0];
 				var initNode = row.cells[initCol].children[0];
 				var stopNode = row.cells[stopCol].children[0];
-				setInputFilter(staNode, checkInt);
-				setInputFilter(ltaNode, checkInt);
+				setInputFilter(staNode, checkFloat);
+				setInputFilter(ltaNode, checkFloat);
 				setInputFilter(initNode, checkFloat);
 				setInputFilter(stopNode, checkFloat);
 				for (var numNode of [staNode, ltaNode, initNode, stopNode])	{
