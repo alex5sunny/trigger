@@ -26,7 +26,7 @@ function apply_save() {
     sendHTML();
 	setTimeout(function()	{
 		location.reload(true);
-	}, 5000);
+	}, 2000);
 }
 
 function sendHTML() {
