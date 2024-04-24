@@ -65,7 +65,7 @@ function setInputFilter(textbox, inputFilter) {
 function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
-	headerRow.children[staCol].innerHTML += "<br/>(len)";
+	headerRow.children[staCol].innerHTML += " / len";
 	headerRow.children[indexCol].style.display = "none";
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
@@ -116,7 +116,7 @@ function apply_save() {
     apply();
     sendHTML();
     setTimeout(nullifyVals, 3000);
-    headerRow.children[staCol].innerHTML += "<br/>(len)";
+    headerRow.children[staCol].innerHTML += " / len";
     //console.log('timer started');
 }
 
@@ -474,14 +474,18 @@ function setUnits(row)	{
 	var trigger_value = row.cells[triggerCol].children[0].value;
 	var stalta_trigger = trigger_value == "sta_lta";
 	var level_trigger = trigger_value == "level";
-	var staNode = row.cells[staCol].children[0];
-	var ltaNode = row.cells[ltaCol].children[0];
+	var staNode = row.cells[staCol];
+	var ltaNode = row.cells[ltaCol];
 	if (stalta_trigger)	{
 		//console.log("stalta");
-		ltaNode.style.display = "inline";
+		for (var ltaChild of ltaNode.children)  {
+		    ltaChild.style.display = "inline";
+		}
 	}	else	{
 		//console.log("not stalta");
-		ltaNode.style.display = "none";
+		for (var ltaChild of ltaNode.children)  {
+		    ltaChild.style.display = "none";
+		}
 		units = "V";
 		var stationCell = row.cells[stationCol];
 		var station = getStation(stationCell);
@@ -491,9 +495,13 @@ function setUnits(row)	{
 	}
 	if (level_trigger)	{
 		console.log("level trigger");
-		staNode.style.display = "none";
+		for (var staChild of staNode.children)  {
+		    staChild.style.display = "none";
+		}
 	}	else	{
-		staNode.style.display = "inline";
+		for (var staChild of staNode.children)  {
+		    staChild.style.display = "inline";
+		}
 	}
 	unitsNode.innerHTML  = units;
 	unitsNode2.innerHTML = units;
