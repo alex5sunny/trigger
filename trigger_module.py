@@ -73,7 +73,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 request_dic = json.loads(content.decode())
 
             if path == 'initTrigger':
-                response_dic = get_sources_settings()
+                response_dic = glob.sources
             if path == 'trigger':
                 triggers = request_dic['triggers']
                 triggers_ids = [int(sid) for sid in triggers]
@@ -171,12 +171,12 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
 
             rules_settings = get_rules_settings()
 
-            sources = get_sources_settings()
+            glob.sources = get_sources_settings()
             visited = set()
-            for station in sources:
+            for station in glob.sources:
                 njsp_params = deepcopy(base_params)
                 njsp_params['handshake']['client_name'] = station
-                conn_data = sources[station]
+                conn_data = glob.sources[station]
                 host = conn_data['host']
                 port = int(conn_data['port'])
                 if (host, port) not in visited:
@@ -221,14 +221,13 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 streams_dict = {stream: (list(stdata['channels'].keys()), 'V')
                                                 for stream, stdata in content['streams'].items()}
                                 prev_dict = {station_dic['stream']: (station, station_dic['out port'])
-                                             for station, station_dic in sources.items()
+                                             for station, station_dic in glob.sources.items()
                                              if host == station_dic['host'] and port == station_dic['port']}
                                 set_source_streams(host, port, streams_dict, prev_dict)
-                                sources = get_sources_settings()
-                                station_for_stream = get_station_for_stream(host, port, sources)
+                                station_for_stream = get_station_for_stream(host, port, glob.sources)
                                 q_interm.extend(split_params(content, station_for_stream))
                             if 'streams' == packet_type:
-                                station_for_stream = get_station_for_stream(host, port, sources)
+                                station_for_stream = get_station_for_stream(host, port, glob.sources)
                                 q_interm.extend(split_streams(content, station_for_stream))
                         for packet_type, content in q_interm:
                             if 'parameters' == packet_type:
@@ -237,9 +236,10 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                    'ringbuffer_size': 10}
                                 if station not in streamers:
                                     streamers[station] = \
-                                        self.njsp.add_streamer('', sources[station]['out port'], streamer_params)
+                                        self.njsp.add_streamer('', glob.sources[station]['out port'], streamer_params)
                                 station_data = content['streams'][station]
-                                sample_rates[station] = station_data['sample_rate']
+                                sample_rates[station] = glob.sources[station]['sample_rate'] = \
+                                    station_data['sample_rate']
                                 chans = list(station_data['channels'].keys())
                                 for chan in chans:
                                     ks[station][chan] = \

@@ -31,6 +31,8 @@ ENCODING = 'cp1250'
 pem_time = 0
 restart = False
 
+sources = {}
+
 
 class ActionType(Enum):
     relay_A = 1

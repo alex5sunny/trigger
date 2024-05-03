@@ -84,6 +84,7 @@ function initPage() {
 				var station = getStation(stationCell);
 				setStationsCell(stations, stationCell);
 				setUnits(row);
+				var freqLim = 0;
 				setFrequencesVisibility(row);
 				if (station in stationsData)	{
 					var channels = stationsData[station]["channels"];
@@ -446,7 +447,20 @@ function stationChange(node)	{
 		var channelCell = row.cells[channelCol];
 		var channels = stationsData[station]["channels"];
 		setChannelsCell(channels, channelCell);
+		setFrequencesVisibility(row);
 	}
+}
+
+function freqChange(node)	{
+	var row = node.parentNode;
+	console.log("row innerHTML:" + row.innerHTML);
+	var stationCell = row.cells[stationCol];
+	var station = getStation(stationCell);
+	if (!(station in stationsData))	{
+		station = Object.keys(stationsData)[0];
+	}
+	var freqLim = stationsData[station]["sample_rate"] / 2;
+	node.value = Math.min(node.value, freqLim);
 }
 
 function setLevels()	{
@@ -515,6 +529,15 @@ function setFrequencesVisibility(row)	{
 	var filterNode = row.cells[filterCol].children[0];
 	var freqminNode = row.cells[freqminCol].children[0];
 	var freqmaxNode = row.cells[freqmaxCol].children[0];
+	var stationCell = row.cells[stationCol];
+	var station = getStation(stationCell);
+	if (!(station in stationsData))	{
+		station = Object.keys(stationsData)[0];
+	}
+	var freqLim = stationsData[station]["sample_rate"] / 2;
+	console.log("freqLim:" + freqLim);
+	freqmaxNode.value = Math.min(freqLim, freqmaxNode.value);
+	freqminNode.value = Math.min(freqLim, freqminNode.value, freqmaxNode.value);
 	if (filterNode.checked)	{
 		freqmaxNode.style.display = "inline";
 		freqminNode.style.display = "inline";

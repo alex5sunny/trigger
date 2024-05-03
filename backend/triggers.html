@@ -2,6 +2,19 @@
 <html>
 	<head>
 		<title>triggers table</title>
+		<style>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+	</style>
 	</head>
 	<body wfd-invisible="true">
 		<table style="width: 100%" id="triggerTable">
@@ -54,29 +67,29 @@
 						</select>
 					</td>
 					<td>
-						<input type="numeric" value="1" size="2" style="text-align: right; display: none;"/>
-						<output>s</output>
-					</td>
-					<td contenteditable="true">
-						<input type="numeric" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="1" size="2" style="text-align: right; display: none;"/>
 						<output>s</output>
 					</td>
 					<td>
-						<input type="numeric" value="0.5" size="5" style="text-align: right;"/>
+						<input type="number" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<output>s</output>
+					</td>
+					<td>
+						<input type="number" value="0.5" size="5" style="text-align: right;"/>
 						<output>V</output>
 					</td>
 					<td>
-						<input type="numeric" value="0.5" size="5" style="text-align: right;"/>
+						<input type="number" value="0.5" size="5" style="text-align: right;"/>
 						<output>V</output>
 					</td>
 					<td>
 						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/>
 					</td>
 					<td>
-						<input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="100" size="2" onchange="freqChange(this)" style="text-align: right; display: none;" wfd-invisible="true"/>
 					</td>
 					<td>
-						<input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="300" size="2" onchange="freqChange(this)" style="text-align: right; display: none;" wfd-invisible="true"/>
 					</td>
 					<td>
 						<img src="img\circle-gray.jpg"/>
@@ -114,29 +127,29 @@
 						</select>
 					</td>
 					<td>
-						<input type="numeric" value="1" size="2" style="text-align: right; display: inline;"/>
-						<output>s</output>
-					</td>
-					<td contenteditable="true">
-						<input type="numeric" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="1" size="2" style="text-align: right; display: inline;"/>
 						<output>s</output>
 					</td>
 					<td>
-						<input type="numeric" value="0.5" size="5" style="text-align: right;"/>
+						<input type="number" value="3" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<output>s</output>
+					</td>
+					<td>
+						<input type="number" value="0.5" size="5" style="text-align: right;"/>
 						<output>V</output>
 					</td>
 					<td>
-						<input type="numeric" value="0.5" size="5" style="text-align: right;"/>
+						<input type="number" value="0.5" size="5" style="text-align: right;"/>
 						<output>V</output>
 					</td>
 					<td>
 						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/>
 					</td>
 					<td>
-						<input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="100" size="2" onchange="freqChange(this)" style="text-align: right; display: none;" wfd-invisible="true"/>
 					</td>
 					<td>
-						<input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="300" size="2" onchange="freqChange(this)" style="text-align: right; display: none;" wfd-invisible="true"/>
 					</td>
 					<td>
 						<img src="img\circle-gray.jpg"/>
@@ -174,29 +187,29 @@
 						</select>
 					</td>
 					<td>
-						<input type="numeric" value="1" size="2" style="text-align: right; display: inline;"/>
+						<input type="number" value="1" size="2" style="text-align: right; display: inline;"/>
 						<output>s</output>
 					</td>
 					<td>
-						<input type="numeric" value="5" size="2" style="text-align: right; display: inline;" wfd-invisible="true"/>
+						<input type="number" value="5" size="2" style="text-align: right; display: inline;" wfd-invisible="true"/>
 						<output>s</output>
 					</td>
 					<td>
-						<input type="numeric" value="4" size="5" style="text-align: right;"/>
+						<input type="number" value="4" size="5" style="text-align: right;"/>
 						<output/>
 					</td>
 					<td>
-						<input type="numeric" value="2" size="5" style="text-align: right;"/>
+						<input type="number" value="2" size="5" style="text-align: right;"/>
 						<output/>
 					</td>
 					<td>
 						<input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/>
 					</td>
 					<td>
-						<input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="100" size="2" onchange="freqChange(this)" style="text-align: right; display: none;" wfd-invisible="true"/>
 					</td>
 					<td>
-						<input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
+						<input type="number" value="300" size="2" onchange="freqChange(this)" style="text-align: right; display: none;" wfd-invisible="true"/>
 					</td>
 					<td>
 						<img src="img\circle-gray.jpg"/>
