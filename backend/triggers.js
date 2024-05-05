@@ -452,8 +452,8 @@ function stationChange(node)	{
 }
 
 function freqChange(node)	{
-	var row = node.parentNode;
-	console.log("row innerHTML:" + row.innerHTML);
+	var row = node.parentNode.parentNode;
+	// console.log("row innerHTML:" + row.innerHTML);
 	var stationCell = row.cells[stationCol];
 	var station = getStation(stationCell);
 	if (!(station in stationsData))	{

@@ -25,7 +25,7 @@ logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.getLogger("gpsd").setLevel(logging.WARNING)
 
 CONNECTION_TOUT = 5000
-PBUF_SIZE = 500
+PBUF_SIZE = 1002
 ENCODING = 'cp1250'
 
 pem_time = 0
@@ -116,5 +116,5 @@ class CustomThread(Thread):
         self.join()
 
 
-action_names_dic0 = {1: 'relayA', 2: 'relayB', 3: 'seedlk'}
+action_names_dic0 = {1: 'relayA', 2: 'relayB', 3: 'outdata'}
 

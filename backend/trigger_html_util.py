@@ -186,7 +186,7 @@ def get_actions_settings():
                    ActionType.relay_B.value: {'name': 'relayB', 'pet': petB}}
     pem = int(root.xpath("//input[@id='PEM']/@value")[0])
     pet = int(root.xpath("//input[@id='PET']/@value")[0])
-    actions_dic[ActionType.send_SIGNAL.value] = {'name': 'seedlk', 'pem': pem, 'pet': pet}
+    actions_dic[ActionType.send_SIGNAL.value] = {'name': 'outdata', 'pem': pem, 'pet': pet}
     for row in root.xpath('/html/body/table/tbody/tr')[ActionType.send_SMS.value:]:
         sms_dic = {'name': row[name_col][0].get('value'),
                    'address': row[address_col][0].get('value'),

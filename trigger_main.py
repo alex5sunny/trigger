@@ -66,7 +66,7 @@ if __name__ == '__main__':
         action_rules = to_action_rules(rule_actions)
         #print('action_rules:' + str(action_rules))
         #exit(1)
-        send_signal_params = action_params['seedlk']
+        send_signal_params = action_params['outdata']
         pem = send_signal_params['pem']
         pet = send_signal_params['pet']
         rules = []

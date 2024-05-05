@@ -255,7 +255,7 @@ for (var id of ["PEM", "PET", "petA", "petB"])	{
 	var element = document.getElementById(id);
 	setInputFilter(element, 
 				   function(value) { 
-				   		return /^\d*$/.test(value) && (value === "" || parseInt(value) < 200); 
+				   		return /^\d*$/.test(value) && (value === "" || parseInt(value) < 501);
 				   });
 	element.addEventListener("change", function() {
 											if (this.value == "")	{
