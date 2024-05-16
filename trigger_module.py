@@ -217,6 +217,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                         port = int(port)
                         q_interm = []
                         for packet_type, content in dev_packets.items():
+                            content = deepcopy(content)
                             if 'parameters' == packet_type:
                                 streams_dict = {stream: (list(stdata['channels'].keys()), 'V')
                                                 for stream, stdata in content['streams'].items()}
