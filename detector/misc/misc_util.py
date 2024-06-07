@@ -69,6 +69,7 @@ def split_params(content: dict, station_for_stream: dict) -> list:
     for stream, stream_data in content['streams'].items():
         content_out = deepcopy(content)
         content_out['streams'] = {station_for_stream[stream]: stream_data}
+        content_out['device_sn'] = station_for_stream[stream]
         out.append(('parameters', content_out))
     return out
 
