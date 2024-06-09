@@ -27,9 +27,9 @@ def getTriggerParams():
                 [el.text for el in row[header_inds[col]].iter() if 'selected' in el.attrib]
         params_dic['trigger_type'] = TriggerType[params_dic.pop('trigger')]
         params_dic['use_filter'] = 'checked' in row[header_inds['filter']][0].attrib
-        for cell_name in ['name', 'sta / len', 'lta', 'init_level', 'stop_level', 'freqmin', 'freqmax']:
+        for cell_name in ['name', 'sta', 'lta', 'init_level', 'stop_level', 'freqmin', 'freqmax']:
             col_type = str if cell_name == 'name' else float if \
-                cell_name in ['stop_level', 'init_level', 'sta / len', 'lta'] else int
+                cell_name in ['stop_level', 'init_level', 'sta', 'lta'] else int
             params_dic[cell_name] = col_type(row[header_inds[cell_name]][0].get('value'))
         params_dic['ind'] = int(row[header_inds['ind']].text.strip())
         params_list.append(params_dic)
@@ -186,7 +186,7 @@ def get_actions_settings():
                    ActionType.relay_B.value: {'name': 'relayB', 'pet': petB}}
     pem = int(root.xpath("//input[@id='PEM']/@value")[0])
     pet = int(root.xpath("//input[@id='PET']/@value")[0])
-    actions_dic[ActionType.send_SIGNAL.value] = {'name': 'seedlk', 'pem': pem, 'pet': pet}
+    actions_dic[ActionType.send_SIGNAL.value] = {'name': 'outdata', 'pem': pem, 'pet': pet}
     for row in root.xpath('/html/body/table/tbody/tr')[ActionType.send_SMS.value:]:
         sms_dic = {'name': row[name_col][0].get('value'),
                    'address': row[address_col][0].get('value'),
