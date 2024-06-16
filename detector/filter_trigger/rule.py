@@ -1,9 +1,5 @@
-from time import sleep
-
-from obspy import UTCDateTime
 import detector.misc.globals as glob
 
-from detector.misc.globals import Port, Subscription, logger
 from detector.misc.misc_util import get_expr
 
 
@@ -24,3 +20,13 @@ def rule_picker(rule_id, triggerings, triggers_ids, formula_list):
             prev_val = rule_val
     return rules_triggerings
 
+
+def custom_picker(triggerings: list[tuple], positives_times: dict, rule_times: dict):
+    for date_time, triggering, trigger_id in triggerings:
+        if not triggering:
+            continue
+        positives_times[trigger_id] = date_time
+        if len(positives_times) >= 3 and \
+                max(positives_times.values()) - min(positives_times.values()) <= 1 and \
+                min(positives_times.values()) - max(rule_times.values()) > 1:
+            rule_times.update(positives_times)

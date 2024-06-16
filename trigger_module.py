@@ -24,7 +24,7 @@ from backend.trigger_html_util import getTriggerParams, \
 from detector.misc.globals import action_names_dic0, ActionType, ConnState
 
 from detector.action.action_process import exec_actions, post_actions
-from detector.filter_trigger.rule import rule_picker
+from detector.filter_trigger.rule import rule_picker, custom_picker
 from detector.misc.misc_util import fill_out_triggerings, append_test_triggerings, \
     to_actions_triggerings, group_triggerings
 
@@ -91,6 +91,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 rules_out = fill_out_triggerings(rules_ids, glob.URULES_TRIGGERINGS,
                                                  glob.LAST_RTRIGGERINGS)
                 response_dic['rules'] = rules_out
+                response_dic['rule_times'] = dict(sorted(glob.RULE_TIMES))
             if path == 'initRule':
                 params_list = getTriggerParams()
                 trigger_dic = {params['ind']: params['name'] for params in params_list}
@@ -265,6 +266,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                              rule_settings['triggers_ids'],
                                                              rule_settings['formula']))
                     rules_triggerings.sort()
+                    custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES)
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings, actions_triggerings)
                     actions_triggerings.sort(key=lambda dtr: (dtr[0], -dtr[1], dtr[2]))

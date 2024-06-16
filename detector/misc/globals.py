@@ -44,6 +44,8 @@ USER_TRIGGERINGS = defaultdict(list)
 LAST_TRIGGERINGS = defaultdict(int)
 URULES_TRIGGERINGS = defaultdict(list)
 LAST_RTRIGGERINGS = defaultdict(int)
+POSITIVES_TIMES = {}
+RULE_TIMES = {}
 
 
 class Port(Enum):
