@@ -90,9 +90,9 @@ function updateFunc () {
                 respObj = JSON.parse(xhr.responseText);
 				if ruleTimes != respObj['rule_times']	{
 					ruleTimes = respObj['rule_times'];
-					for (const [triggerId, time_s] of Object.entries(ruleTimes)) {
+					for (triggerId in ruleTimes) {
 						var d = new Date();
-						d.setTime(time_s * 1000);
+						d.setTime(ruleTimes[triggerId] * 1000);
 						document.getElementById("ruleTimes").innerHTML += 
 							triggersDic[triggerId] + ':' + d + ' ';
 					}
