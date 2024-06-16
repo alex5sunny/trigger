@@ -22,6 +22,8 @@ var triggersObj = {};
 
 var rulesObj = getRulesObj();
 
+var ruleTimes = {};
+
 var sessionId = Math.floor(Math.random() * 1000000) + 1;
 
 initFunc();
@@ -86,6 +88,16 @@ function updateFunc () {
 		    if (xhr.status === 200)    {
                 console.log('response:' + xhr.responseText);
                 respObj = JSON.parse(xhr.responseText);
+				if ruleTimes != respObj['rule_times']	{
+					ruleTimes = respObj['rule_times'];
+					for (const [triggerId, time_s] of Object.entries(ruleTimes)) {
+						var d = new Date();
+						d.setTime(time_s * 1000);
+						document.getElementById("ruleTimes").innerHTML += 
+							triggersDic[triggerId] + ':' + d + ' ';
+					}
+					document.getElementById("ruleTimes").innerHTML += "<br>";
+				}
                 triggersObj = respObj['triggers'];
                 rulesObj = respObj['rules'];
                 //console.log('rulesObj from server:' + JSON.stringify(rulesObj));
