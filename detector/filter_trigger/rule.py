@@ -21,12 +21,13 @@ def rule_picker(rule_id, triggerings, triggers_ids, formula_list):
     return rules_triggerings
 
 
-def custom_picker(triggerings: list[tuple], positives_times: dict, rule_times: dict):
+def custom_picker(triggerings: list, positives_times: dict, rule_times: dict):
     for date_time, triggering, trigger_id in triggerings:
         if not triggering:
             continue
-        positives_times[trigger_id] = date_time
+        positives_times[trigger_id] = float(date_time)
         if len(positives_times) >= 3 and \
                 max(positives_times.values()) - min(positives_times.values()) <= 1 and \
-                min(positives_times.values()) - max(rule_times.values()) > 1:
+                    (not rule_times or
+                     min(positives_times.values()) - max(rule_times.values()) > 1):
             rule_times.update(positives_times)
