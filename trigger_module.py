@@ -91,7 +91,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 rules_out = fill_out_triggerings(rules_ids, glob.URULES_TRIGGERINGS,
                                                  glob.LAST_RTRIGGERINGS)
                 response_dic['rules'] = rules_out
-                response_dic['rule_times'] = dict(sorted(glob.RULE_TIMES))
+                response_dic['rule_times'] = dict(sorted(glob.RULE_TIMES.items()))
             if path == 'initRule':
                 params_list = getTriggerParams()
                 trigger_dic = {params['ind']: params['name'] for params in params_list}
