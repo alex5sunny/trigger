@@ -273,6 +273,12 @@ function setSelected(node) 	{
 	}
 }
 
+function setValue(elementId)	{
+	var node = document.getElementById(elementId);
+	var value = node.value;
+	node.setAttribute("value", value);
+}
+
 function apply()	{
     var table = document.getElementById("rulesTable");
     var rows = table.rows;
@@ -290,6 +296,10 @@ function apply()	{
     		setSelected(actionNode);
     	}
     }
+	for (var elementId of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3'])	{
+		setValue(elementId);
+	}
+
 	var xhr = new XMLHttpRequest();
 	var url = "applyRules";
 	xhr.open("POST", url, true);
