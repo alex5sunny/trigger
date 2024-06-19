@@ -468,3 +468,34 @@ function removeAction(actionCell)	{
 	}
 	actionCell.removeChild(nodes[i]);
 }
+
+/* function setInputFilter(textbox, inputFilter) {
+  ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+    textbox.addEventListener(event, function() {
+      if (inputFilter(this.value)) {
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        this.value = "";
+      }
+    });
+  });
+}
+
+for (var id of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3'])	{
+	var element = document.getElementById(id);
+	setInputFilter(element, 
+				   function(value) { 
+				   		return /^\d{2}[.,]?\d{6}$/.test(value);
+				   });
+	element.addEventListener("change", function() {
+											if (this.value == "")	{
+												this.value = 0;
+											};
+									   });
+}
+ */
