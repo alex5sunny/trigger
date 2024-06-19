@@ -43,10 +43,10 @@ def get_rules_settings():
     formula_col = headers_dic['formula']
     actions_col = headers_dic['actions']
     rows = root.xpath('/html/body/table/tbody/tr')[1:]
-    rule_dic = {}
+    rules_dic = {}
     for row in rows:
         rule_id = int(row[id_col].text)
-        rule_dic[rule_id] = {}
+        rules_dic[rule_id] = {}
         formula_list = []
         for el in row[formula_col].iter():
             if 'selected' in el.attrib:
@@ -54,13 +54,16 @@ def get_rules_settings():
                     formula_list.append(int(el.attrib['trigger_id']))
                 else:
                     formula_list.append(el.text)
-        rule_dic[rule_id]['formula'] = formula_list
-        rule_dic[rule_id]['triggers_ids'] = [formula_list[i]
+        rules_dic[rule_id]['formula'] = formula_list
+        rules_dic[rule_id]['triggers_ids'] = [formula_list[i]
                                              for i in range(0, len(formula_list), 2)]
-        rule_dic[rule_id]['actions'] = [int(el.attrib['action_id'])
-                                        for el in row[actions_col].iter()
-                                        if 'selected' in el.attrib]
-    return rule_dic
+        rules_dic[rule_id]['actions'] = [int(el.attrib['action_id'])
+                                         for el in row[actions_col].iter()
+                                         if 'selected' in el.attrib]
+    rules_settings = {'rules_dic': rules_dic, 'coords': {}}
+    for lat_lon in 'lat1 lon1 lat2 lon2 lat3 lon3'.split():
+        rules_settings['coords'][lat_lon] = float(root.xpath(f"//*[@id='{lat_lon}']/@value")[0])
+    return rules_settings
 
 
 def get_sources_settings():

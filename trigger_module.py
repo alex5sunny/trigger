@@ -170,7 +170,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             rules_triggerings = []
             actions_triggerings = []
 
-            rules_settings = get_rules_settings()
+            rules_settings_dic = get_rules_settings()['rules_dic']
 
             sources = get_sources_settings()
             visited = set()
@@ -261,14 +261,14 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                         triggerings.extend(trigger.pick(starttime, data))
                     triggerings.sort()
                     # process triggerings and clear after that
-                    for rule_id, rule_settings in rules_settings.items():
+                    for rule_id, rule_settings in rules_settings_dic.items():
                         rules_triggerings.extend(rule_picker(rule_id, triggerings,
                                                              rule_settings['triggers_ids'],
                                                              rule_settings['formula']))
                     rules_triggerings.sort()
                     custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES)
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
-                    to_actions_triggerings(rules_triggerings, rules_settings, actions_triggerings)
+                    to_actions_triggerings(rules_triggerings, rules_settings_dic, actions_triggerings)
                     actions_triggerings.sort(key=lambda dtr: (dtr[0], -dtr[1], dtr[2]))
                     group_triggerings(triggerings, glob.USER_TRIGGERINGS, glob.LAST_TRIGGERINGS)
                     group_triggerings(rules_triggerings, glob.URULES_TRIGGERINGS, glob.LAST_RTRIGGERINGS)
