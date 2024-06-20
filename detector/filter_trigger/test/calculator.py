@@ -1,91 +1,24 @@
 import math
 
-llat_1 = 56.17258888
-llong_1 = 37.1101722
-t_1 = float(input('t1= (0.5)') or .5)
+lat1 = 56.17258888
+long1 = 37.1101722
+t1 = float(input('t1= (0.5)') or .5)
 
-llat_2 = 56.1722611
-llong_2 = 37.10723889
-t_2 = float(input('t2= (1.0)') or 1.0)
+lat2 = 56.1722611
+long2 = 37.10723889
+t2 = float(input('t2= (1.0)') or 1.0)
 
-llat_3 = 56.1729833
-llong_3 = 37.10795278
-t_3 = float(input('t3= (1.5)') or 1.5)
+lat3 = 56.1729833
+long3 = 37.10795278
+t3 = float(input('t3= (1.5)') or 1.5)
 
 rad = 6363418
 
-if t_1 > t_2 and t_2 > t_3:
-    t2 = t_1
-    llat2 = llat_1
-    llong2 = llong_1
-    t3 = t_2
-    llat3 = llat_2
-    llong3 = llong_2
-    t1 = t_3
-    llat1 = llat_3
-    llong1 = llong_3
+(t1, lat1, long1), (t3, lat3, long3), (t2, lat2, long2) = \
+    sorted(((t1, lat1, long1), (t2, lat2, long2), (t3, lat3, long3)))
 
-if t_1 > t_3 and t_3 > t_2:
-    t2 = t_1
-    llat2 = llat_1
-    llong2 = llong_1
-    t3 = t_3
-    llat3 = llat_3
-    llong3 = llong_3
-    t1 = t_2
-    llat1 = llat_2
-    llong1 = llong_2
-
-if t_2 > t_1 and t_1 > t_3:
-    t2 = t_2
-    llat2 = llat_2
-    llong2 = llong_2
-    t3 = t_1
-    llat3 = llat_1
-    llong3 = llong_1
-    t1 = t_3
-    llat1 = llat_3
-    llong1 = llong_3
-
-if t_2 > t_3 and t_3 > t_1:
-    t2 = t_2
-    llat2 = llat_2
-    llong2 = llong_2
-    t3 = t_3
-    llat3 = llat_3
-    llong3 = llong_3
-    t1 = t_1
-    llat1 = llat_1
-    llong1 = llong_1
-
-if t_3 > t_2 and t_2 > t_1:
-    t2 = t_3
-    llat2 = llat_3
-    llong2 = llong_3
-    t3 = t_2
-    llat3 = llat_2
-    llong3 = llong_2
-    t1 = t_1
-    llat1 = llat_1
-    llong1 = llong_1
-
-if t_3 > t_1 and t_1 > t_2:
-    t2 = t_3
-    llat2 = llat_3
-    llong2 = llong_3
-    t3 = t_1
-    llat3 = llat_1
-    llong3 = llong_1
-    t1 = t_2
-    llat1 = llat_2
-    llong1 = llong_2
-
-lat1 = llat1 * math.pi / 180.
-lat2 = llat2 * math.pi / 180.
-lat3 = llat3 * math.pi / 180.
-long1 = llong1 * math.pi / 180.
-long2 = llong2 * math.pi / 180.
-long3 = llong3 * math.pi / 180.
+lat1, lat2, lat3, long1, long2, long3 = \
+    [lat_lon * math.pi / 180. for lat_lon in (lat1, lat2, lat3, long1, long2, long3)]
 
 cl1 = math.cos(lat1)
 cl2 = math.cos(lat2)
@@ -132,6 +65,7 @@ tan_b1 = ((tau_2 * l_1) / (tau_1 * l_2 * math.sin(omega)) - (math.tan(omega)) **
 b1 = math.atan(tan_b1) * 180 / (math.pi)
 # угол1 =  56.169145020750015
 b1 = (b1 + 180) % 180
+assert(int(b1) == 56)
 print('угол1 = ', b1)
 
 # азимут 2-3
@@ -177,5 +111,6 @@ else:
 azimut2S = (azimut2S + 360) % 360
 
 # АЗИМУТ1 =  152.6545701416132
+assert(int(azimut2S) == 152)
 print('АЗИМУТ1 = ', azimut2S)
 
