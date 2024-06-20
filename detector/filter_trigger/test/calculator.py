@@ -131,18 +131,15 @@ tau_2 = t2 - t1
 tan_b1 = ((tau_2 * l_1) / (tau_1 * l_2 * math.sin(omega)) - (math.tan(omega)) ** (-1))
 b1 = math.atan(tan_b1) * 180 / (math.pi)
 # угол1 =  56.169145020750015
-if b1 < 0:
-    b1 = b1 + 180
-    print('угол1 = ', b1)
-else:
-    print('угол1 = ', b1)
+b1 = (b1 + 180) % 180
+print('угол1 = ', b1)
 
 # азимут 2-3
 x = (cl2 * sl3) - (sl2 * cl3 * cdelta23)
 y = sdelta23 * cl3
 z = math.degrees(math.atan(-y / x))
 
-if (x < 0):
+if x < 0:
     z = z + 180.
 
 z2 = (z + 180.) % 360. - 180.
@@ -158,7 +155,7 @@ x = (cl2 * sl1) - (sl2 * cl1 * cdelta21)
 y = sdelta21 * cl1
 z = math.degrees(math.atan(-y / x))
 
-if (x < 0):
+if x < 0:
     z = z + 180.
 
 z21 = (z + 180.) % 360. - 180.
@@ -177,10 +174,7 @@ else:
     else:
         azimut2S = azimut23 - b1
 
-if azimut2S > 360:
-    azimut2S = azimut2S - 360
-if azimut2S < 0:
-    azimut2S = 360 + azimut2S
+azimut2S = (azimut2S + 360) % 360
 
 # АЗИМУТ1 =  152.6545701416132
 print('АЗИМУТ1 = ', azimut2S)
