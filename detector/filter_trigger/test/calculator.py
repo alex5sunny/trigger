@@ -20,40 +20,24 @@ rad = 6363418
 lat1, lat2, lat3, long1, long2, long3 = \
     [lat_lon * math.pi / 180. for lat_lon in (lat1, lat2, lat3, long1, long2, long3)]
 
-cl1 = math.cos(lat1)
-cl2 = math.cos(lat2)
-cl3 = math.cos(lat3)
-sl1 = math.sin(lat1)
-sl2 = math.sin(lat2)
-sl3 = math.sin(lat3)
+(cl1, sl1), (cl2, sl2), (cl3, sl3) = [(math.cos(lat), math.sin(lat)) for lat in (lat1, lat2, lat3)]
 
-# вычисляем стороны первого треугольника
-delta12 = long2 - long1
-cdelta12 = math.cos(delta12)
-sdelta12 = math.sin(delta12)
 
-y12 = math.sqrt(math.pow(cl2 * sdelta12, 2) + math.pow(cl1 * sl2 - sl1 * cl2 * cdelta12, 2))
-x12 = sl1 * sl2 + cl1 * cl2 * cdelta12
-ad12 = math.atan2(y12, x12)
-l_2 = ad12 * rad
+def l_calc(cl1, sl1, cl2, sl2, long1, long2):
+    delta12 = long2 - long1
+    cdelta12 = math.cos(delta12)
+    sdelta12 = math.sin(delta12)
 
-delta13 = long3 - long1
-cdelta13 = math.cos(delta13)
-sdelta13 = math.sin(delta13)
+    y12 = math.sqrt(math.pow(cl2 * sdelta12, 2) + math.pow(cl1 * sl2 - sl1 * cl2 * cdelta12, 2))
+    x12 = sl1 * sl2 + cl1 * cl2 * cdelta12
+    ad12 = math.atan2(y12, x12)
+    l_2 = ad12 * rad
+    return l_2, cdelta12, sdelta12
 
-y13 = math.sqrt(math.pow(cl3 * sdelta13, 2) + math.pow(cl1 * sl3 - sl1 * cl3 * cdelta13, 2))
-x13 = sl1 * sl3 + cl1 * cl3 * cdelta13
-ad13 = math.atan2(y13, x13)
-l_3 = ad13 * rad
 
-delta23 = long3 - long2
-cdelta23 = math.cos(delta23)
-sdelta23 = math.sin(delta23)
-
-y23 = math.sqrt(math.pow(cl3 * sdelta23, 2) + math.pow(cl2 * sl3 - sl2 * cl3 * cdelta23, 2))
-x23 = sl2 * sl3 + cl2 * cl3 * cdelta23
-ad23 = math.atan2(y23, x23)
-l_1 = ad23 * rad
+l_2, _, _ = l_calc(cl1, sl1, cl2, sl2, long1, long2)
+l_3, _, _ = l_calc(cl1, sl1, cl3, sl3, long1, long3)
+l_1, cdelta23, sdelta23 = l_calc(cl2, sl2, cl3, sl3, long2, long3)
 
 # вычисляем альфа1
 cos_omega = (l_3 ** 2 - l_2 ** 2 - l_1 ** 2) / (-2 * l_1 * l_2)
@@ -62,7 +46,7 @@ tau_1 = t2 - t3
 tau_2 = t2 - t1
 
 tan_b1 = ((tau_2 * l_1) / (tau_1 * l_2 * math.sin(omega)) - (math.tan(omega)) ** (-1))
-b1 = math.atan(tan_b1) * 180 / (math.pi)
+b1 = math.atan(tan_b1) * 180 / math.pi
 # угол1 =  56.169145020750015
 b1 = (b1 + 180) % 180
 assert(int(b1) == 56)
@@ -113,4 +97,3 @@ azimut2S = (azimut2S + 360) % 360
 # АЗИМУТ1 =  152.6545701416132
 assert(int(azimut2S) == 152)
 print('АЗИМУТ1 = ', azimut2S)
-
