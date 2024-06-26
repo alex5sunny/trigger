@@ -1,4 +1,5 @@
 import detector.misc.globals as glob
+from detector.misc.calc_angles import angles_calc
 
 from detector.misc.misc_util import get_expr
 
@@ -21,7 +22,7 @@ def rule_picker(rule_id, triggerings, triggers_ids, formula_list):
     return rules_triggerings
 
 
-def custom_picker(triggerings: list, positives_times: dict, rule_times: dict):
+def custom_picker(triggerings: list, positives_times: dict, rule_times: dict, coords: dict):
     for date_time, triggering, trigger_id in triggerings:
         if not triggering:
             continue
@@ -31,3 +32,7 @@ def custom_picker(triggerings: list, positives_times: dict, rule_times: dict):
                     (not rule_times or
                      min(positives_times.values()) - max(rule_times.values()) > 1):
             rule_times.update(positives_times)
+        lat1, lon1, lat2, lon2, lat3, lon3 = {coords[lat_lon] for lat_lon in
+                                              'lat1 lon1 lat2 lon2 lat3 lon3'.split()}
+        t1, t2, t3 = rule_times[:3]
+        glob.ANGLES = angles_calc(lat1, lon1, t1, lat2, lon2, t2, lat3, lon3, t3)

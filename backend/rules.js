@@ -93,15 +93,15 @@ function updateFunc () {
 					for (triggerId in ruleTimes) {
 						var d = new Date();
 						d.setTime(ruleTimes[triggerId] * 1000);
-						// * add 'events' label
-						// * every trigger on a new line, between triggers two new lines
-						// * shorten data format short data, short time, no GMT
-						// * output millisecons
-						var date_str = d.toLocaleString('sv', {year:'numeric', month:'numeric', day:'numeric', hour:'numeric', minute:'numeric', second:'numeric', fractionalSecondDigits: 3}).replace(',', '.').replace(' ', 'T');
-						document.getElementById("ruleTimes").innerHTML += 
+						var date_str = d.toLocaleString('sv', {year:'numeric', month:'numeric', day:'numeric',
+						    hour:'numeric', minute:'numeric', second:'numeric', fractionalSecondDigits: 3})
+						    .replace(',', '.').replace(' ', 'T');
+						document.getElementById('ruleTimes').innerHTML +=
 							triggersDic[triggerId] + ':' + date_str + '<br>';
 					}
-					document.getElementById('ruleTimes').innerHTML += '<br>';
+					angles = respObj['angles']
+    				document.getElementById('ruleTimes').innerHTML += 'azimuth:' + angles[1] +
+    				    ' b1:' + angles[0] + '<br>';
 				}
                 triggersObj = respObj['triggers'];
                 rulesObj = respObj['rules'];

@@ -46,6 +46,7 @@ URULES_TRIGGERINGS = defaultdict(list)
 LAST_RTRIGGERINGS = defaultdict(int)
 POSITIVES_TIMES = {}
 RULE_TIMES = {}
+ANGLES = ()
 
 
 class Port(Enum):

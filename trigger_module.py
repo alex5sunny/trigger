@@ -92,6 +92,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                  glob.LAST_RTRIGGERINGS)
                 response_dic['rules'] = rules_out
                 response_dic['rule_times'] = dict(sorted(glob.RULE_TIMES.items()))
+                response_dic['angles'] = list(glob.ANGLES)
             if path == 'initRule':
                 params_list = getTriggerParams()
                 trigger_dic = {params['ind']: params['name'] for params in params_list}
@@ -170,7 +171,9 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             rules_triggerings = []
             actions_triggerings = []
 
-            rules_settings_dic = get_rules_settings()['rules_dic']
+            rules_settings = get_rules_settings()
+            rules_settings_dic = rules_settings['rules_dic']
+            coords = rules_settings['coords']
 
             sources = get_sources_settings()
             visited = set()
@@ -266,7 +269,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                              rule_settings['triggers_ids'],
                                                              rule_settings['formula']))
                     rules_triggerings.sort()
-                    custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES)
+                    custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES, coords)
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings_dic, actions_triggerings)
                     actions_triggerings.sort(key=lambda dtr: (dtr[0], -dtr[1], dtr[2]))
