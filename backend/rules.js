@@ -100,8 +100,9 @@ function updateFunc () {
 							triggersDic[triggerId] + ':' + date_str + '<br>';
 					}
 					angles = respObj['angles']
-    				document.getElementById('ruleTimes').innerHTML += 'azimuth:' + angles[1] +
-    				    ' b1:' + angles[0] + '<br>';
+					if angles.length > 0:
+    				    document.getElementById('ruleTimes').innerHTML += 'azimuth:' + (angles[1]).toFixed(2) +
+    				        ' b1:' + (angles[0]).toFixed(2) + '<br>';
 				}
                 triggersObj = respObj['triggers'];
                 rulesObj = respObj['rules'];

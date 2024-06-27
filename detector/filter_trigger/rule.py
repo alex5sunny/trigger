@@ -32,7 +32,7 @@ def custom_picker(triggerings: list, positives_times: dict, rule_times: dict, co
                     (not rule_times or
                      min(positives_times.values()) - max(rule_times.values()) > 1):
             rule_times.update(positives_times)
-        lat1, lon1, lat2, lon2, lat3, lon3 = {coords[lat_lon] for lat_lon in
-                                              'lat1 lon1 lat2 lon2 lat3 lon3'.split()}
-        t1, t2, t3 = rule_times[:3]
-        glob.ANGLES = angles_calc(lat1, lon1, t1, lat2, lon2, t2, lat3, lon3, t3)
+            lat1, lon1, lat2, lon2, lat3, lon3 = {coords[lat_lon] for lat_lon in
+                                                  'lat1 lon1 lat2 lon2 lat3 lon3'.split()}
+            t1, t2, t3 = list(rule_times.values())[:3]
+            glob.ANGLES = angles_calc(lat1, lon1, t1, lat2, lon2, t2, lat3, lon3, t3)
