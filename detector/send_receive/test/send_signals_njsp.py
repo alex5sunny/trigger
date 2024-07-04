@@ -8,6 +8,10 @@ import numpy as np
 from obspy import *
 from matplotlib import pyplot
 
+import sys
+
+sys.path.append('/var/lib/cloud9/ndas_rt/sw_modules/trigger')
+
 from detector.misc.header_util import chunk_stream, stream_to_dic
 from detector.send_receive.njsp.njsp import NJSP
 from detector.test.signal_generator import SignalGenerator
@@ -42,6 +46,9 @@ def send_signal(st1, st2, port, units='V'):
     ch_dic2 = {tr.stats.channel: {'ch_active': True, 'counts_in_volt': tr.stats.k} for tr in st2}
     parameters_dic = {
         'parameters': {
+            'device_sn': 'NRAD',
+            'device_model': 'NDAS-8426N v.1.20',
+            'fw_version': '5.2 12.05.2024',
             'streams': {
                 st1[0].stats.station: {
                     'sample_rate': int(st1[0].stats.sampling_rate),
@@ -105,4 +112,4 @@ data = st[-1].data
 st[-1].data = np.append(data[2000:], data[:2000])
 
 print(st)
-send_signal(st, st100, 10001)
+send_signal(st, st100, 10002)
