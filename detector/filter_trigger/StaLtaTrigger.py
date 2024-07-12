@@ -67,7 +67,7 @@ class SltaTriggerCore:
     def trigger(self, data):
         self.buf = np.append(self.buf[-self.nlta:], data)
         if self.buf.size > self.nlta:
-            out = classic_sta_lta(self.buf, self.nsta, self.nlta)[-data.size:]
+            out = classic_sta_lta(self.buf-self.buf.mean(), self.nsta, self.nlta)[-data.size:]
         else:
             out = np.require(np.zeros(data.size), dtype='float')
         return out
