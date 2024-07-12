@@ -9,9 +9,9 @@ from detector.send_receive.njsp.njsp import NJSP
 
 show_signal = True
 
-host = 'localhost'
-port = 10011
-station = 'NDXX'
+host = '192.168.7.2'
+PORT = 10002
+STATION = 'NRAD'
 sample_rate = init_packet = check_time = None
 
 logpath = None
@@ -37,7 +37,7 @@ njsp_params = {
 }
 
 njsp_queue = Queue(100)
-reader1 = njsp.add_reader(host, port, 'TRIG', njsp_params, njsp_queue)
+reader1 = njsp.add_reader(host, PORT, 'TRIG', njsp_params, njsp_queue)
 print('reader:', reader1)
 # reader2 = njsp.add_reader('localhost', 10011, 'TRIG', njsp_params, njsp_queue)
 
@@ -59,9 +59,9 @@ while True:
         continue
     for conn_name, dev_packets in packets_data.items():
         for packet_type, content in dev_packets.items():
-            if 'streams' == packet_type and station in content and sample_rate:
+            if 'streams' == packet_type and STATION in content and sample_rate:
                 for stream_name, stream_data in content.items():
-                    if stream_name == station:
+                    if stream_name == STATION:
                         starttime = UTCDateTime(stream_data['timestamp'])
                         for ch_name, bytez in stream_data['samples'].items():
                             #stream_data['samples'][ch_name] = len(stream_data['samples'][ch_name])
@@ -80,14 +80,15 @@ while True:
                             st.trim(starttime=st[0].stats.endtime - 10)
                             pyplot.clf()
                             st.plot(fig=figure)
+                            # figure.axes[0].set_ylim(-1e-6, 1e-6)
                             pyplot.show()
                             pyplot.pause(.1)
                 # logger.debug(f'stream content, streams:{list(content.keys())} sample_rate:{sample_rate}')
-            if packet_type == 'parameters' and station in content['streams']:
+            if packet_type == 'parameters' and STATION in content['streams']:
                 for stream in list(content['streams'].keys()):
-                    if stream != station:
+                    if stream != STATION:
                         del content['streams'][stream]
                 init_packet = content
                 print('init_packet:', init_packet)
-                sample_rate = content['streams'][station]['sample_rate']
+                sample_rate = content['streams'][STATION]['sample_rate']
         #logger.debug('packets:\n' + str(packets_data))

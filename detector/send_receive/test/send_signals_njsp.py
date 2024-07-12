@@ -1,14 +1,11 @@
-import json
 import logging
+import sys
 import time
-from collections import OrderedDict
+from pathlib import PurePath, Path
 
 import numpy as np
-
-from obspy import *
 from matplotlib import pyplot
-
-import sys
+from obspy import *
 
 sys.path.append('/var/lib/cloud9/ndas_rt/sw_modules/trigger')
 
@@ -19,6 +16,7 @@ import os
 import detector.misc as misc
 import inspect
 
+STATION = 'NRAD'
 
 logpath = None
 loglevel = logging.DEBUG
@@ -30,34 +28,29 @@ logger = logging.getLogger('generator')
 njsp = NJSP(logger=logger, log_level=logging.DEBUG)
 
 
-def send_signal(st1, st2, port, units='V'):
+def send_signal(st_cur, port, units='V'):
     show_signal = False
 
-    signal_generator1 = SignalGenerator(st1)
-    signal_generator2 = SignalGenerator(st2)
+    signal_generator = SignalGenerator(st_cur)
 
-    #context = zmq.Context()
     if show_signal:
         pyplot.ion()
         figure = pyplot.figure()
     st_vis = Stream()
     check_time = time.time()
-    ch_dic  = {tr.stats.channel: {'ch_active': True, 'counts_in_volt': tr.stats.k} for tr in st1}
-    ch_dic2 = {tr.stats.channel: {'ch_active': True, 'counts_in_volt': tr.stats.k} for tr in st2}
+    ch_dic = {tr.stats.channel:
+                  {'ch_active': True, 'counts_in_volt': float(tr.stats.k)}
+                  for tr in st_cur}
+
     parameters_dic = {
         'parameters': {
-            'device_sn': 'NRAD',
+            'device_sn': STATION,
             'device_model': 'NDAS-8426N v.1.20',
             'fw_version': '5.2 12.05.2024',
             'streams': {
-                st1[0].stats.station: {
-                    'sample_rate': int(st1[0].stats.sampling_rate),
+                st_cur[0].stats.station: {
+                    'sample_rate': int(st_cur[0].stats.sampling_rate),
                     'channels': ch_dic,
-                    'data_format': 'bson'
-                },
-                st2[0].stats.station: {
-                    'sample_rate': int(st2[0].stats.sampling_rate),
-                    'channels': ch_dic2,
                     'data_format': 'bson'
                 }
             }
@@ -67,9 +60,8 @@ def send_signal(st1, st2, port, units='V'):
     streamserver = njsp.add_streamer('', port, streamer_params)
 
     while True:
-        st1 = signal_generator1.get_stream()
-        st2 = signal_generator2.get_stream()
-        st_add = st1.copy()
+        st_cur = signal_generator.get_stream()
+        st_add = st_cur.copy()
         for tr_vis in st_add:
             tr_vis.data = np.require(tr_vis.data / tr_vis.stats.k, 'float32')
         st_vis += st_add
@@ -86,30 +78,38 @@ def send_signal(st1, st2, port, units='V'):
                 pyplot.pause(.01)
             else:
                 time.sleep(.1)  # delete this when return pyplot!
-        for st12 in [st1, st2]:
-            sts = chunk_stream(st12)
-            bson_datas = [stream_to_dic(st, units) for st in sts]
-            for bson_data in bson_datas:
-                njsp.broadcast_data(streamserver, bson_data)
-                # data_len = len(bson_data)
-                # size_bytes = ('%08x' % data_len).encode()
-                # sender.send(size_bytes + bson_data)
-                time.sleep(.01)
-        #print('broadcasted')
+        sts = chunk_stream(st_cur)
+        bson_datas = [stream_to_dic(st, units) for st in sts]
+        for bson_data in bson_datas:
+            njsp.broadcast_data(streamserver, bson_data)
+            time.sleep(.01)
         time.sleep(.1)
 
 
-base_path = os.path.split(inspect.getfile(misc))[0] + '/'
-st = read(base_path + 'st1000.mseed')
-for tr in st:
-    tr.stats.k = 1000.0
-st100 = read(base_path + 'st100.mseed')
-for tr in st100:
-    tr.stats.k = 10000
-    tr.stats.network = 'RU'
-    tr.stats.location = '00'
-data = st[-1].data
-st[-1].data = np.append(data[2000:], data[:2000])
+def bin_to_stream(ch1_bin_path: PurePath, ch2_bin_path: PurePath, ch3_bin_path: PurePath) -> Stream:
+    st = Stream()
+    max_val = 0
+    for i, bin_path in enumerate([ch1_bin_path, ch2_bin_path, ch3_bin_path]):
+        tr = Trace(np.fromfile(bin_path, 'float32'))
+        tr.stats.sampling_rate = 1000
+        tr.stats.channel = f'ch{1 + i}'
+        tr.stats.station = STATION
+        max_val = max(max_val, max(abs(tr.data)))
+        st += tr
+    max_int = 2 ** 31
+    k = max_int / max_val
+    for tr in st:
+        tr.data = (tr.data * k).astype('int32')
+        tr.stats.k = k
+    return st
+
+
+base_path = 'e:/converter_data/Azimuth_from_saved_data/Record2_cut' #os.path.split(inspect.getfile(misc))[0] + '/'
+st = bin_to_stream(base_path / Path('ch1.bin'), base_path / Path('ch2.bin'), base_path / Path('ch3.bin'))   # read(base_path + 'st1000.mseed')
+# for tr in st:
+#     tr.stats.k = 1000.0
+# data = st[-1].data
+# st[-1].data = np.append(data[2000:], data[:2000])
 
 print(st)
-send_signal(st, st100, 10002)
+send_signal(st, 10002)
