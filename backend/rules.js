@@ -89,6 +89,7 @@ function updateFunc () {
                 console.log('response:' + xhr.responseText);
                 respObj = JSON.parse(xhr.responseText);
 				if (JSON.stringify(ruleTimes) != JSON.stringify(respObj['rule_times']))	{
+				    var append_str = '';
 					ruleTimes = respObj['rule_times'];
 					for (triggerId in ruleTimes) {
 						var d = new Date();
@@ -96,13 +97,15 @@ function updateFunc () {
 						var date_str = d.toLocaleString('sv', {year:'numeric', month:'numeric', day:'numeric',
 						    hour:'numeric', minute:'numeric', second:'numeric', fractionalSecondDigits: 3})
 						    .replace(',', '.').replace(' ', 'T');
-						document.getElementById('ruleTimes').innerHTML +=
-							triggersDic[triggerId] + ':' + date_str + '<br>';
+						//document.getElementById('ruleTimes').innerHTML +=
+						append_str += triggersDic[triggerId] + ':' + date_str + '<br>';
 					}
 					angles = respObj['angles']
-					if angles.length > 0:
-    				    document.getElementById('ruleTimes').innerHTML += 'azimuth:' + (angles[1]).toFixed(2) +
+					if (angles.length > 0)
+    				    append_str += 'azimuth:' + (angles[1]).toFixed(2) +
     				        ' b1:' + (angles[0]).toFixed(2) + '<br>';
+    				document.getElementById('ruleTimes').innerHTML = append_str + '<br>' +
+    				    document.getElementById('ruleTimes').innerHTML;
 				}
                 triggersObj = respObj['triggers'];
                 rulesObj = respObj['rules'];
