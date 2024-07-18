@@ -65,7 +65,7 @@ function updateRules(rulesObj)	{
     	var row = rows[i];
     	var imgNode = row.cells[ruleValCol].children[0];
       	var ruleId = row.cells[ruleIdCol].innerHTML;
-      	var src;
+		var src;
        	//console.log('ruleId:' + ruleId + ' ruleVal:' + rulesObj[ruleId]);
       	if (ruleId in rulesObj)	{
       		if (rulesObj[ruleId])	{
@@ -303,6 +303,8 @@ function apply()	{
 	for (var elementId of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3'])	{
 		setValue(elementId);
 	}
+
+	document.getElementById('ruleTimes').innerHTML = '';
 
 	var xhr = new XMLHttpRequest();
 	var url = "applyRules";

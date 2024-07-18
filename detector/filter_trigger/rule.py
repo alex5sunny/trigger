@@ -29,9 +29,9 @@ def custom_picker(triggerings: list, positives_times: dict, rule_times: dict, co
         positives_times[trigger_id] = float(date_time)
         if len(positives_times) >= 3 and \
                 max(positives_times.values()) - min(positives_times.values()) <= 1 and \
-                    (not rule_times or
-                     min(positives_times.values()) - max(rule_times.values()) > 1):
-            rule_times.update(positives_times)
+                (not rule_times or
+                 min(positives_times.values()) - max(rule_times.values()) > 1):
+            rule_times.update(sorted(positives_times.items()))
             lat1, lon1, lat2, lon2, lat3, lon3 = {coords[lat_lon] for lat_lon in
                                                   'lat1 lon1 lat2 lon2 lat3 lon3'.split()}
             t1, t2, t3 = list(rule_times.values())[:3]

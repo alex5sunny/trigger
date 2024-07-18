@@ -112,4 +112,6 @@ st = bin_to_stream(base_path / Path('ch1.bin'), base_path / Path('ch2.bin'), bas
 # st[-1].data = np.append(data[2000:], data[:2000])
 
 print(st)
+# st.plot(method='full')
+# exit(1)
 send_signal(st, 10002)

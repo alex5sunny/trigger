@@ -1,16 +1,16 @@
 from detector.misc.calc_angles import angles_calc
 
-lat1 = 54
-long1 = 36
-t1 = float(input('t1= (0.5)') or .5)
+lat1 = 56.17258888
+long1 = 37.1101722
+t1 = float(input('t1= (1)') or 4.113)
 
-lat2 = 52
-long2 = 36
-t2 = float(input('t2= (1.0)') or 1.0)
+lat2 = 56.1722611
+long2 = 37.10723889
+t2 = float(input('t2= (2)') or 3.943)
 
-lat3 = 53
-long3 = 35
-t3 = float(input('t3= (1.5)') or 1.5)
+lat3 = 56.1729833
+long3 = 37.10795278
+t3 = float(input('t3= (3)') or 3.833)
 
 b, azimut = angles_calc(lat1, long1, t1, lat2, long2, t2, lat3, long3, t3)
 
