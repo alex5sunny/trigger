@@ -11,8 +11,6 @@ import numpy as np
 from com_main_module import COMMON_MAIN_MODULE_CLASS
 from obspy import UTCDateTime
 
-from detector.custom_processing.custom_processing import create_context, process_custom_data
-
 sys.path.append(os.path.dirname(__file__))
 
 import detector.misc.globals as glob
@@ -29,6 +27,8 @@ from detector.action.action_process import exec_actions, post_actions
 from detector.filter_trigger.rule import rule_picker
 from detector.misc.misc_util import fill_out_triggerings, append_test_triggerings, \
     to_actions_triggerings, group_triggerings
+
+from detector.custom_processing.custom_processing import create_context, process_custom_data
 
 
 class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
