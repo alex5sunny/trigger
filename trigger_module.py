@@ -11,6 +11,8 @@ import numpy as np
 from com_main_module import COMMON_MAIN_MODULE_CLASS
 from obspy import UTCDateTime
 
+from detector.custom_processing.custom_processing import create_context, process_custom_data
+
 sys.path.append(os.path.dirname(__file__))
 
 import detector.misc.globals as glob
@@ -24,7 +26,7 @@ from backend.trigger_html_util import getTriggerParams, \
 from detector.misc.globals import action_names_dic0, ActionType, ConnState
 
 from detector.action.action_process import exec_actions, post_actions
-from detector.filter_trigger.rule import rule_picker, custom_picker
+from detector.filter_trigger.rule import rule_picker
 from detector.misc.misc_util import fill_out_triggerings, append_test_triggerings, \
     to_actions_triggerings, group_triggerings
 
@@ -91,8 +93,9 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 rules_out = fill_out_triggerings(rules_ids, glob.URULES_TRIGGERINGS,
                                                  glob.LAST_RTRIGGERINGS)
                 response_dic['rules'] = rules_out
-                response_dic['rule_times'] = dict(sorted(glob.RULE_TIMES.items()))
-                response_dic['angles'] = list(glob.ANGLES)
+                if glob.LIST_LOG:
+                    response_dic['events'] = json.dumps(glob.LIST_LOG)
+                    glob.LIST_LOG.clear()
             if path == 'initRule':
                 params_list = getTriggerParams()
                 trigger_dic = {params['ind']: params['name'] for params in params_list}
@@ -100,7 +103,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 'actions': deepcopy(action_names_dic0)}
                 actions_dic = get_actions_settings()
                 # logger.debug(f'actions_dic:{actions_dic}')
-                sms_dic = {sms_id: actions_dic[sms_id]['name'] for sms_id in actions_dic 
+                sms_dic = {sms_id: actions_dic[sms_id]['name'] for sms_id in actions_dic
                            if sms_id > 3}
                 # logger.debug(f'sms_dic:{sms_dic}')
                 response_dic['actions'].update(sms_dic)
@@ -201,6 +204,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
 
             check_time = UTCDateTime()
             glob.CONN_STATE = ConnState.CONNECTING
+            custom_context = create_context()
             while not glob.restart and not self.shutdown_event.is_set():
                 if glob.CONN_STATE != ConnState.CONNECTED:
                     self.message = glob.CONN_STATE.name.lower()
@@ -255,11 +259,14 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 station = next(iter(content))
                                 packets_q.append({packet_type: content})
                                 starttime = UTCDateTime(content[station]['timestamp'])
+                                if not custom_context['starttime']:
+                                    custom_context['starttime'] = starttime
                                 channels_data = content[station]['samples']
                                 # logger.debug(f'ks keys:{list(ks[station].keys())}')
                                 for chan, bytez in channels_data.items():
                                     k = ks[station][chan]
                                     data = np.frombuffer(bytez, 'int').astype('float') / k
+                                    custom_context[chan] = np.append(custom_context[chan], data)
                                     for trigger in triggers.get(station, {}).get(chan, []):
                                         triggerings.extend(trigger.pick(starttime, data))
                     triggerings.sort()
@@ -269,7 +276,8 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                              rule_settings['triggers_ids'],
                                                              rule_settings['formula']))
                     rules_triggerings.sort()
-                    custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES, coords)
+                    # custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES, coords)
+                    glob.LIST_LOG += process_custom_data(custom_context, glob.DATA_BUF_DURATION, glob.DATA_SHIFT)
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings_dic, actions_triggerings)
                     actions_triggerings.sort(key=lambda dtr: (dtr[0], -dtr[1], dtr[2]))
@@ -291,7 +299,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
 
             conns = list(streamers.values()) + list(readers.values())
             for conn in conns:
-                print(f'remove conn:{conn}')                
+                print(f'remove conn:{conn}')
                 self.njsp.remove(conn)
             while set(conns) & set(self.njsp.handles):
                 sleep(.1)

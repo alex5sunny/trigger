@@ -48,6 +48,11 @@ POSITIVES_TIMES = {}
 RULE_TIMES = {}
 ANGLES = ()
 
+DATA_BUF_DURATION = 5000
+DATA_SHIFT = 1000
+
+LIST_LOG = []
+
 
 class Port(Enum):
     signal = 10003
