@@ -177,6 +177,9 @@ class NJSP_READER(NJSP_HANDLE_BASE):
         self.logger.info("Connected")
         while True:
             packet = await self.read_packet(reader)
+            if self.queue.full():
+                self.logger.error("Queue full")
+                self.queue.queue.clear()
             self.queue.put_nowait({self.name: packet})
             if 'abort' in packet:
                 writer.close()
@@ -202,6 +205,7 @@ class NJSP_READER(NJSP_HANDLE_BASE):
                     await client.closed.wait()
             except queue.Full:
                 self.logger.error("Queue full")
+                self.queue.queue
                 break
             except ConnectionError as e:
                 self.logger.debug('Connection error:\n\t%s' % repr(e))

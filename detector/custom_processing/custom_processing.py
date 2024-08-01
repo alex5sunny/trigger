@@ -22,7 +22,7 @@ def process_custom_data(context: dict, data_buf_duration: int, data_shift: int) 
              },
             data_buf_duration
         )
-        res.extend([f'{k}: {v}' for event in events for k, v in event.items()])
+        res.extend([f'{k}: {v}' for event in events for k, v in event.items() if k != 'data'])
         for chan in chans:
             context[chan] = context[chan][data_shift:]
         context['starttime'] += data_shift / 1000

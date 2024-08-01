@@ -94,7 +94,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                  glob.LAST_RTRIGGERINGS)
                 response_dic['rules'] = rules_out
                 if glob.LIST_LOG:
-                    response_dic['events'] = json.dumps(glob.LIST_LOG)
+                    response_dic['events'] = json.dumps('<br>'.join(glob.LIST_LOG))
                     glob.LIST_LOG.clear()
             if path == 'initRule':
                 params_list = getTriggerParams()
@@ -277,7 +277,11 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                              rule_settings['formula']))
                     rules_triggerings.sort()
                     # custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES, coords)
-                    glob.LIST_LOG += process_custom_data(custom_context, glob.DATA_BUF_DURATION, glob.DATA_SHIFT)
+                    list_log = process_custom_data(custom_context, glob.DATA_BUF_DURATION, glob.DATA_SHIFT)
+                    if list_log:
+                        glob.logger.debug('list log:' + str(list_log))
+                        glob.LIST_LOG.extend(list_log)
+                        glob.LIST_LOG[:-10] = []
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings_dic, actions_triggerings)
                     actions_triggerings.sort(key=lambda dtr: (dtr[0], -dtr[1], dtr[2]))

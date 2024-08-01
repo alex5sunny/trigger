@@ -14,3 +14,5 @@ SHIFT_MOVING_AVG = 500  # in milliseconds
 NUMBER_OF_CHANNELS = 3
 
 MAX_DELTA = 500  # in microseconds
+
+
