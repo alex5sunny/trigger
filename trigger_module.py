@@ -14,7 +14,7 @@ from obspy import UTCDateTime
 sys.path.append(os.path.dirname(__file__))
 
 import detector.misc.globals as glob
-from detector.misc.misc_util import get_station_for_stream, split_params, split_streams
+from detector.misc.misc_util import get_station_for_stream, split_params, split_streams, check_break
 from detector.action.action_pipe import execute_action
 from detector.filter_trigger.construct_triggers import construct_triggers
 
@@ -257,6 +257,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                         trigger.set_sample_rate(sample_rates[station])
                             if 'streams' == packet_type:
                                 station = next(iter(content))
+                                check_break(content, packets_q, 1. / sample_rates[station], station)
                                 packets_q.append({packet_type: content})
                                 starttime = UTCDateTime(content[station]['timestamp'])
                                 if not custom_context['starttime']:

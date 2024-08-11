@@ -90,7 +90,8 @@ function updateFunc () {
                 respObj = JSON.parse(xhr.responseText);
 				if ('events' in respObj)	{
 				    document.getElementById('ruleTimes').innerHTML =
-							respObj.events + '<br>' + document.getElementById('ruleTimes').innerHTML;
+						(respObj.events + '<br>' +
+						 document.getElementById('ruleTimes').innerHTML).substring(0, 2000);
 				}
                 triggersObj = respObj['triggers'];
                 rulesObj = respObj['rules'];

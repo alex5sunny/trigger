@@ -101,7 +101,7 @@ def chunk_stream(st):
     stats = st[0].stats
     npts = stats.npts
     n_of_chans = len(st)
-    k = max(1, npts * n_of_chans * 4 // 1000)
+    k = max(1, npts * n_of_chans * 4 // 100)
     sts = [Stream(trs) for trs in zip(*[tr / k for tr in st]) if trs[0]]  # bug walkaround?
     for st in sts:
         if not st:

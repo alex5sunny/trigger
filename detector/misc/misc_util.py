@@ -1,7 +1,10 @@
-import time
+import logging
+
 from copy import deepcopy
 
 from obspy import UTCDateTime
+
+logger = logging.getLogger('glob')
 
 
 def get_expr(formula_list, triggers_dic):
@@ -86,25 +89,22 @@ def get_packet_for_log(content: dict) -> dict:
     return content_log
 
 
-# def get_channels(context, stations_set):
-#     socket_sub = context.socket(zmq.SUB)
-#     socket_sub.connect('tcp://localhost:' + str(Port.proxy.value))
-#     socket_sub.setsockopt(zmq.SUBSCRIBE, Subscription.intern.value)
-#
-#     local_set = {}
-#     chs_set = {}
-#
-#     cur_time = UTCDateTime()
-#     check_time = cur_time + 2
-#     while cur_time < check_time:
-#         sleep(.1)
-#         try:
-#             bdata = socket_sub.recv(zmq.NOBLOCK)
-#         except zmq.ZMQError:
-#             pass
-#
-#     socket_sub.close()
-
-#print(get_formula_triggers(['1', 'or', '2', 'and', '3']))
-#print(get_expr(['2', 'and not', '3', 'and', '1'], {1: True, 2: True}))
+def check_break(content: dict, packets_q: list, delta: float, station: str) -> [bool, str]:
+    starttime = UTCDateTime(content[station]['timestamp'])
+    for i in range(len(packets_q)):
+        prev_content = packets_q[-1-i]['streams']
+        prev_station = next(iter(prev_content))
+        if station == prev_station:
+            station_data = prev_content[station]
+            prevtime = UTCDateTime(station_data['timestamp'])
+            npts = len(next(iter(station_data['samples'].values()))) // 4
+            prevtime += npts * delta
+            if abs(prevtime - starttime) > delta:
+                logger.warning(f'packets break, starttime:{starttime} prevtime:{prevtime} station:{station} '
+                               f'npts:{npts}')
+            else:
+                pass
+                # logger.debug(f'no break, starttime:{starttime} prevtime:{prevtime} station:{station}')
+            return
+    logger.debug(f'no prev packet, station:{station}')
 

@@ -52,12 +52,13 @@ def send_signal(st_cur, port, units='V'):
     while True:
         st_cur = signal_generator.get_stream()
         time.sleep(.1)  # delete this when return pyplot!
-        sts = chunk_stream(st_cur)
-        bson_datas = [stream_to_dic(st, units) for st in sts]
-        for bson_data in bson_datas:
-            njsp.broadcast_data(streamserver, bson_data)
-            time.sleep(.01)
-        time.sleep(.1)
+        # bson_datas = [stream_to_dic(st, units) for st in sts]
+        bson_data = stream_to_dic(st_cur, units)
+        njsp.broadcast_data(streamserver, bson_data)
+        # for bson_data in bson_datas:
+        #     njsp.broadcast_data(streamserver, bson_data)
+        #     time.sleep(.01)
+        time.sleep(.8)
 
 
 def bin_to_stream(ch1_bin_path: PurePath, ch2_bin_path: PurePath, ch3_bin_path: PurePath) -> Stream:

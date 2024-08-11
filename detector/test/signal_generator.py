@@ -20,5 +20,5 @@ class SignalGenerator:
             for tr in self.st:
                 tr.stats.starttime = tr.stats.starttime + self.period
             ret_val = (st_sliced + self.st.slice(endtime=dt)).merge()
-        self.prev_time = dt
+        self.prev_time = dt + self.st[0].stats.delta
         return ret_val
