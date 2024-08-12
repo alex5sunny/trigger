@@ -12,7 +12,7 @@ def create_context() -> dict:
 
 
 def process_custom_data(context: dict, data_buf_duration: int, data_shift: int) -> List[str]:
-    res: List[str] = []
+    res: List[dict] = []
     chans = 'ch1 ch2 ch3'.split()
     while len(context['ch1']) > data_buf_duration:
         events = find_events(
@@ -22,7 +22,7 @@ def process_custom_data(context: dict, data_buf_duration: int, data_shift: int) 
              },
             data_buf_duration
         )
-        res.extend([f'{k}: {v}' for event in events for k, v in event.items() if k != 'data'])
+        res.extend([{k: str(v) for k, v in event.items() if k != 'data'} for event in events])
         for chan in chans:
             context[chan] = context[chan][data_shift:]
         context['starttime'] += data_shift / 1000

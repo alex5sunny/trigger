@@ -14,7 +14,8 @@ from obspy import UTCDateTime
 sys.path.append(os.path.dirname(__file__))
 
 import detector.misc.globals as glob
-from detector.misc.misc_util import get_station_for_stream, split_params, split_streams, check_break
+from detector.misc.misc_util import get_station_for_stream, split_params, split_streams, check_break, get_endtime, \
+    append_to_graph, log
 from detector.action.action_pipe import execute_action
 from detector.filter_trigger.construct_triggers import construct_triggers
 
@@ -83,6 +84,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                        glob.LAST_TRIGGERINGS)
                 response_dic['triggers'] = triggerings_out
             if path == 'rule':
+                logger = logging.getLogger('glob')
                 triggers = request_dic['triggers']
                 triggers_ids = [int(sid) for sid in triggers]
                 triggerings_out = fill_out_triggerings(triggers_ids, glob.USER_TRIGGERINGS,
@@ -94,8 +96,12 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                                  glob.LAST_RTRIGGERINGS)
                 response_dic['rules'] = rules_out
                 if glob.LIST_LOG:
-                    response_dic['events'] = json.dumps('<br>'.join(glob.LIST_LOG))
+                    response_dic['events'] = json.dumps(glob.LIST_LOG)
                     glob.LIST_LOG.clear()
+                if len(glob.GRAPH_DATA['ch1']):
+                    response_dic['endtime'] = glob.GRAPH_DATA['endtime']
+                    [response_dic.update({f'ch{i}': glob.GRAPH_DATA[f'ch{i}'].tolist()}) for i in range(1, 4)]
+                    glob.GRAPH_DATA.clear()
             if path == 'initRule':
                 params_list = getTriggerParams()
                 trigger_dic = {params['ind']: params['name'] for params in params_list}
@@ -257,7 +263,9 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                         trigger.set_sample_rate(sample_rates[station])
                             if 'streams' == packet_type:
                                 station = next(iter(content))
-                                check_break(content, packets_q, 1. / sample_rates[station], station)
+                                delta = 1. / sample_rates[station]
+                                check_break(content, packets_q, delta, station)
+                                glob.GRAPH_DATA['endtime'] = get_endtime(content, delta, station)
                                 packets_q.append({packet_type: content})
                                 starttime = UTCDateTime(content[station]['timestamp'])
                                 if not custom_context['starttime']:
@@ -268,6 +276,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                     k = ks[station][chan]
                                     data = np.frombuffer(bytez, 'int').astype('float') / k
                                     custom_context[chan] = np.append(custom_context[chan], data)
+                                    glob.GRAPH_DATA[chan] = append_to_graph(glob.GRAPH_DATA[chan], data)
                                     for trigger in triggers.get(station, {}).get(chan, []):
                                         triggerings.extend(trigger.pick(starttime, data))
                     triggerings.sort()

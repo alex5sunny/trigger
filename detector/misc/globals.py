@@ -11,6 +11,8 @@ from time import sleep
 
 import os
 
+import numpy as np
+
 if os.name == 'nt':
     logpath = None  # os.path.dirname(os.path.dirname(os.path.dirname(__file__))) + '/trigger.log'
 else:
@@ -52,6 +54,9 @@ DATA_BUF_DURATION = 5000
 DATA_SHIFT = 1000
 
 LIST_LOG = []
+
+
+GRAPH_DATA = defaultdict(lambda: np.array([], dtype='float32'))
 
 
 class Port(Enum):

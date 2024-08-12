@@ -1,7 +1,9 @@
 import logging
 
 from copy import deepcopy
+from datetime import datetime
 
+import numpy as np
 from obspy import UTCDateTime
 
 logger = logging.getLogger('glob')
@@ -107,4 +109,20 @@ def check_break(content: dict, packets_q: list, delta: float, station: str) -> [
                 # logger.debug(f'no break, starttime:{starttime} prevtime:{prevtime} station:{station}')
             return
     logger.debug(f'no prev packet, station:{station}')
+
+
+def get_endtime(content: dict, delta: float, station: str) -> str:
+    station_data = content[station]
+    starttime = UTCDateTime(station_data['timestamp'])
+    npts = len(next(iter(station_data['samples'].values()))) // 4
+    return str((starttime + delta * (npts - 1)).datetime)
+
+
+def append_to_graph(prev_data: np.ndarray, new_data: np.ndarray) -> np.ndarray:
+    res = np.append(prev_data, new_data.astype('float32'))
+    return res if len(res) <= 5000 else res[-1000:]
+
+
+def log(mes: str):
+    logger.debug(mes)
 

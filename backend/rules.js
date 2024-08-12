@@ -78,6 +78,11 @@ function updateRules(rulesObj)	{
     }
 }
 
+
+var GRAPH_DATA = {ch1: [], ch2: [], ch3: []}
+
+var MARKERS_DATA = new Map()
+
 function updateFunc () {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "rule", true);
@@ -86,12 +91,30 @@ function updateFunc () {
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4) {
 		    if (xhr.status === 200)    {
-                console.log('response:' + xhr.responseText);
                 respObj = JSON.parse(xhr.responseText);
+				if ('endtime' in respObj)	{
+					// console.log('npts:' + respObj['ch1'].length);
+					GRAPH_DATA['endtime'] = new Date(respObj['endtime'])
+					for (let chan of ['ch1', 'ch2', 'ch3']) {
+						GRAPH_DATA[chan].push(...respObj[chan])
+						if (GRAPH_DATA[chan].length > 5000)	{
+							GRAPH_DATA[chan].splice(0, GRAPH_DATA[chan].length - 5000)
+						}
+					}
+				} else	{
+					console.log('response:' + xhr.responseText);
+				}
 				if ('events' in respObj)	{
 				    document.getElementById('ruleTimes').innerHTML =
 						(respObj.events + '<br>' +
 						 document.getElementById('ruleTimes').innerHTML).substring(0, 2000);
+					respObj.events = JSON.parse(respObj.events);
+					for (let ev of respObj.events)	{
+						// var d = new Date(ev.t3)
+						// console.log('ev:' + ev + ' t3:' + ev.t3 + ' d:' + d)
+						MARKERS_DATA.set(new Date(ev.t3), {azimuth1: ev.azimuth1, azimuth2: ev.azimuth2});
+						// console.log('keys:' + Array.from( MARKERS_DATA.keys() ));
+					}
 				}
                 triggersObj = respObj['triggers'];
                 rulesObj = respObj['rules'];
@@ -113,7 +136,7 @@ function updateFunc () {
 	var rulesObj = getRulesObj();
 	//console.log('rulesObj:' + JSON.stringify(rulesObj));
 	var data = {triggers: triggersObj, sessionId: sessionId, rules: rulesObj};
-	console.log('data to send:' + JSON.stringify(data));
+	//console.log('data to send:' + JSON.stringify(data));
 	xhr.send(JSON.stringify(data));
 }
 
@@ -461,33 +484,99 @@ function removeAction(actionCell)	{
 	actionCell.removeChild(nodes[i]);
 }
 
-/* function setInputFilter(textbox, inputFilter) {
-  ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-    textbox.addEventListener(event, function() {
-      if (inputFilter(this.value)) {
-        this.oldValue = this.value;
-        this.oldSelectionStart = this.selectionStart;
-        this.oldSelectionEnd = this.selectionEnd;
-      } else if (this.hasOwnProperty("oldValue")) {
-        this.value = this.oldValue;
-        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-      } else {
-        this.value = "";
-      }
-    });
-  });
+function genArray(ar_len) {
+    var ar = []
+    for (var i = 0; i < ar_len; i++)  {
+        ar[i] = Math.round(Math.random()*10) + 1
+    }
+    return ar
 }
 
-for (var id of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3'])	{
-	var element = document.getElementById(id);
-	setInputFilter(element, 
-				   function(value) { 
-				   		return /^\d{2}[.,]?\d{6}$/.test(value);
-				   });
-	element.addEventListener("change", function() {
-											if (this.value == "")	{
-												this.value = 0;
-											};
-									   });
+function genTimes(date_time, n)  {
+    var times = [date_time]
+    var t = date_time
+    for (var i = 0; i < n - 1; i++) {
+        var t = new Date(t)
+        t.setMilliseconds(t.getMilliseconds() - 1)
+        times.unshift(t)
+    }
+    return times
 }
- */
+
+function actualizeMarkers()	{
+	let keys = Array.from( MARKERS_DATA.keys() );
+	// console.log('keys:' + keys)
+	for (let ke of keys)	{
+		const endtime = GRAPH_DATA['endtime']
+		var back_time = new Date(endtime)
+		back_time.setSeconds(back_time.getSeconds() - 5)
+		// console.log('ke:' + ke + ' back_time:' + back_time)
+		if (MARKERS_DATA.has(ke) && ke < back_time)	{
+			MARKERS_DATA.delete(ke);
+		}
+	}
+}
+
+function markY()	{
+	var ys = []
+	var n = GRAPH_DATA.ch3.length
+	var delta = 0.001
+	for (const t of MARKERS_DATA.keys()) {
+		var ind = Math.round((t - GRAPH_DATA.endtime + n * delta) / delta);
+		ys[ys.length] = GRAPH_DATA.ch3[ind]
+	}
+	return ys
+}
+
+function markTexts()	{
+	var texts = []
+	var delta = 0.001
+	for (const t of MARKERS_DATA.keys()) {
+		texts[texts.length] = '' + MARKERS_DATA.get(t)['azimuth1'] + '<br>' + MARKERS_DATA.get(t)['azimuth2']
+	}
+	return texts
+}
+
+Plotly.newPlot('graph',
+    [
+        {
+            y: [],
+            x: [],
+            mode: 'lines',
+            line: {color: 'orange'}
+        },
+        {
+            y: [],
+            x: [],
+            mode: 'lines',
+            line: {color: 'green'}
+        },
+        {
+            y: [],
+            x: [],
+            mode: 'lines',
+            line: {color: 'blue'}
+        },
+        {
+            mode: 'markers+text',
+            textposition: 'top',
+            line: {color: 'red'}
+        }
+    ]
+);
+
+
+setInterval(function() {
+    var date = new Date()
+    var times = genTimes(GRAPH_DATA.endtime, GRAPH_DATA.ch1.length)
+    actualizeMarkers()
+    Plotly.update(
+        'graph',
+        {
+            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, []],
+            x: [times, times, times, []],
+            text: [[], [], [], []]
+        }
+    )
+}, 1000)
+

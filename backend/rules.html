@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>rules table</title>
+		<script src="plotly-latest.min.js"></script>
 	</head>
 	<body>
 		<table style="width: 100%" id="rulesTable">
@@ -94,9 +95,8 @@
 			<label for="lon3">lon3:</label>
 			<input id="lon3" inputmode="numeric" value="37.10795278" size="10"/>
 		</p>
-		<p>events:<br/>
-		</p>
-		<p id="ruleTimes"/>
+		<div id="graph" align="right"></div>
+		<p id="ruleTimes" align="left"/>
 		<script src="rules.js" wfd-invisible="true">
 
 		</script>
