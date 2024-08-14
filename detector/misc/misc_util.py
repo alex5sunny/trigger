@@ -1,7 +1,12 @@
-import time
-from copy import deepcopy
+import logging
 
+from copy import deepcopy
+from datetime import datetime
+
+import numpy as np
 from obspy import UTCDateTime
+
+logger = logging.getLogger('glob')
 
 
 def get_expr(formula_list, triggers_dic):
@@ -69,6 +74,7 @@ def split_params(content: dict, station_for_stream: dict) -> list:
     for stream, stream_data in content['streams'].items():
         content_out = deepcopy(content)
         content_out['streams'] = {station_for_stream[stream]: stream_data}
+        content_out['device_sn'] = station_for_stream[stream]
         out.append(('parameters', content_out))
     return out
 
@@ -85,25 +91,38 @@ def get_packet_for_log(content: dict) -> dict:
     return content_log
 
 
-# def get_channels(context, stations_set):
-#     socket_sub = context.socket(zmq.SUB)
-#     socket_sub.connect('tcp://localhost:' + str(Port.proxy.value))
-#     socket_sub.setsockopt(zmq.SUBSCRIBE, Subscription.intern.value)
-#
-#     local_set = {}
-#     chs_set = {}
-#
-#     cur_time = UTCDateTime()
-#     check_time = cur_time + 2
-#     while cur_time < check_time:
-#         sleep(.1)
-#         try:
-#             bdata = socket_sub.recv(zmq.NOBLOCK)
-#         except zmq.ZMQError:
-#             pass
-#
-#     socket_sub.close()
+def check_break(content: dict, packets_q: list, delta: float, station: str) -> [bool, str]:
+    starttime = UTCDateTime(content[station]['timestamp'])
+    for i in range(len(packets_q)):
+        prev_content = packets_q[-1-i]['streams']
+        prev_station = next(iter(prev_content))
+        if station == prev_station:
+            station_data = prev_content[station]
+            prevtime = UTCDateTime(station_data['timestamp'])
+            npts = len(next(iter(station_data['samples'].values()))) // 4
+            prevtime += npts * delta
+            if abs(prevtime - starttime) > delta:
+                logger.warning(f'packets break, starttime:{starttime} prevtime:{prevtime} station:{station} '
+                               f'npts:{npts}')
+            else:
+                pass
+                # logger.debug(f'no break, starttime:{starttime} prevtime:{prevtime} station:{station}')
+            return
+    logger.debug(f'no prev packet, station:{station}')
 
-#print(get_formula_triggers(['1', 'or', '2', 'and', '3']))
-#print(get_expr(['2', 'and not', '3', 'and', '1'], {1: True, 2: True}))
+
+def get_endtime(content: dict, delta: float, station: str) -> str:
+    station_data = content[station]
+    starttime = UTCDateTime(station_data['timestamp'])
+    npts = len(next(iter(station_data['samples'].values()))) // 4
+    return str((starttime + delta * (npts - 1)).datetime)
+
+
+def append_to_graph(prev_data: np.ndarray, new_data: np.ndarray) -> np.ndarray:
+    res = np.append(prev_data, new_data.astype('float32'))
+    return res if len(res) <= 5000 else res[-1000:]
+
+
+def get_logger() -> logging.Logger:
+    return logger
 
