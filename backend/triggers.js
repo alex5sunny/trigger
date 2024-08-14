@@ -65,7 +65,7 @@ function setInputFilter(textbox, inputFilter) {
 function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
-	headerRow.children[staCol].innerHTML += " / len";
+	headerRow.children[staCol].innerHTML += "/len";
 	headerRow.children[indexCol].style.display = "none";
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
