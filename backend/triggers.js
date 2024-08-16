@@ -31,6 +31,7 @@ window.onbeforeunload = function() {
 	//needsUpdate = true;
 };
 
+var HeadersOrig = document.getElementById("triggerTable").rows[0].cloneNode(true);
 console.log("init page");
 initPage();
 
@@ -62,11 +63,17 @@ function setInputFilter(textbox, inputFilter) {
 	  			});
 }
 
+function initHeaders(headerRow)	{
+	headerRow.children[staCol].textContent = "STA(len)";
+	headerRow.children[ltaCol].textContent = "LTA";
+	headerRow.children[triggerCol].textContent = "type";
+	headerRow.children[indexCol].style.display = "none";
+}
+
 function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
-	headerRow.children[staCol].innerHTML += "/len";
-	headerRow.children[indexCol].style.display = "none";
+	initHeaders(headerRow)
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () {
@@ -111,14 +118,13 @@ function initPage() {
 }
 
 function apply_save() {
-	var headerRow = document.getElementById("triggerTable").rows[0];
-	headerRow.children[staCol].innerHTML = "sta";
+	var table = document.getElementById("triggerTable");
+	var headerRow = table.rows[0];
+	table.children[0].replaceChild(HeadersOrig, headerRow);
 	genNames();
     apply();
     sendHTML();
     setTimeout(nullifyVals, 3000);
-    headerRow.children[staCol].innerHTML += " / len";
-    //console.log('timer started');
 }
 
 function apply() {
@@ -178,6 +184,8 @@ function nullifyVals()	{
 		var imgNode = rows[j].cells[valCol].children[0];
 	    imgNode.setAttribute("src", "img\\circle-gray.jpg");
 	}
+	var headerRow = document.getElementById("triggerTable").rows[0];
+	initHeaders(headerRow);
 }
 
 setTimeout(updateFunc, 1000);
@@ -451,18 +459,6 @@ function stationChange(node)	{
 	}
 }
 
-function freqChange(node)	{
-	var row = node.parentNode.parentNode;
-	// console.log("row innerHTML:" + row.innerHTML);
-	var stationCell = row.cells[stationCol];
-	var station = getStation(stationCell);
-	if (!(station in stationsData))	{
-		station = Object.keys(stationsData)[0];
-	}
-	var freqLim = stationsData[station]["sample_rate"] / 2;
-	node.value = Math.min(node.value, freqLim);
-}
-
 function setLevels()	{
 	var rows = document.getElementById("triggerTable").rows;
 	for (var row of Array.from(rows).slice(1))	{
@@ -486,7 +482,7 @@ function setUnits(row)	{
 	var unitsNode2 = row.cells[stopCol].children[1];
 	var units = "";
 	var trigger_value = row.cells[triggerCol].children[0].value;
-	var stalta_trigger = trigger_value == "sta_lta";
+	var stalta_trigger = trigger_value == "STA/LTA";
 	var level_trigger = trigger_value == "level";
 	var staNode = row.cells[staCol];
 	var ltaNode = row.cells[ltaCol];
@@ -529,15 +525,6 @@ function setFrequencesVisibility(row)	{
 	var filterNode = row.cells[filterCol].children[0];
 	var freqminNode = row.cells[freqminCol].children[0];
 	var freqmaxNode = row.cells[freqmaxCol].children[0];
-	var stationCell = row.cells[stationCol];
-	var station = getStation(stationCell);
-	if (!(station in stationsData))	{
-		station = Object.keys(stationsData)[0];
-	}
-	var freqLim = stationsData[station]["sample_rate"] / 2;
-	console.log("freqLim:" + freqLim);
-	freqmaxNode.value = Math.min(freqLim, freqmaxNode.value);
-	freqminNode.value = Math.min(freqLim, freqminNode.value, freqmaxNode.value);
 	if (filterNode.checked)	{
 		freqmaxNode.style.display = "inline";
 		freqminNode.style.display = "inline";
