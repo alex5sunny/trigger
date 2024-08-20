@@ -63,8 +63,6 @@ class LevelTrigger:
                     else:
                         data_out[i:] = [0.0] * (n - i)
                         i = n
-        if self.count:
-            logger.debug(f'count:{self.count}')
         return data_out
 
 
