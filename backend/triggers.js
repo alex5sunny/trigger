@@ -120,7 +120,9 @@ function initPage() {
 function apply_save() {
 	var table = document.getElementById("triggerTable");
 	var headerRow = table.rows[0];
-	table.children[0].replaceChild(HeadersOrig, headerRow);
+	for (let i = 0; i < headerRow.children.length; i++) {
+  		headerRow.children[i].textContent = HeadersOrig.children[i].textContent;
+	}
 	genNames();
     apply();
     sendHTML();
