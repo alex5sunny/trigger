@@ -33,9 +33,37 @@ class RmsTrigger:
 
 class LevelTrigger:
 
+    def __init__(self, npts: int, level: float):
+        self.npts = npts
+        self.level = level
+        self.count = 0
+
     def trigger(self, data):
-        #logger.debug(f'level trigger, max val:{max(data)}, min val:{min(data)}')
-        return data
+        n = len(data)
+        data_out = np.array([0.0] * n)
+        i = 0
+        while i < n:
+            if self.count:
+                if i + self.count >= n:
+                    data_out[i:] = [self.level * 1.01] * (n - i)
+                    self.count -= n - i
+                    i = n
+                else:
+                    data_out[i: i+self.count+1] = [self.level * 1.01] * self.count + [0]
+                    self.count = 0
+                    i += self.count + 1
+            else:
+                if data[i] >= self.level:
+                    self.count = self.npts
+                else:
+                    offset = np.argmax(data[i:] >= self.level)
+                    if offset:
+                        data_out[i: i+offset] = [0.0] * offset
+                        i += offset
+                    else:
+                        data_out[i:] = [0.0] * (n - i)
+                        i = n
+        return data_out
 
 
 # class RmsTrigger:

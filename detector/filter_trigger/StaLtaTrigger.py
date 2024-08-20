@@ -115,7 +115,7 @@ class TriggerWrapper:
         if self.trigger_type == TriggerType.RMS:
             self.data_trigger = RmsTrigger(nsta)
         if self.trigger_type == TriggerType.level:
-            self.data_trigger = LevelTrigger()
+            self.data_trigger = LevelTrigger(nsta, self.init_level)
         if self.use_filter:
             self.filter = Filter(self.sample_rate, self.freqmin, self.freqmax)
 
