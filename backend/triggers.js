@@ -120,7 +120,9 @@ function initPage() {
 function apply_save() {
 	var table = document.getElementById("triggerTable");
 	var headerRow = table.rows[0];
-	table.children[0].replaceChild(HeadersOrig, headerRow);
+	for (let i = 0; i < headerRow.children.length; i++) {
+  		headerRow.children[i].textContent = HeadersOrig.children[i].textContent;
+	}
 	genNames();
     apply();
     sendHTML();
@@ -505,9 +507,9 @@ function setUnits(row)	{
 	}
 	if (level_trigger)	{
 		console.log("level trigger");
-		for (var staChild of staNode.children)  {
-		    staChild.style.display = "none";
-		}
+//		for (var staChild of staNode.children)  {
+//		    staChild.style.display = "none";
+//		}
 	}	else	{
 		for (var staChild of staNode.children)  {
 		    staChild.style.display = "inline";
