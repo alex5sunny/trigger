@@ -23,13 +23,20 @@ var filterCol = headersObj["filter"];
 var freqminCol = headersObj["freqmin"];
 var freqmaxCol = headersObj["freqmax"];
 
-//var needsUpdate = false;
-
-// this will force reload on every visit
-window.onbeforeunload = function() {
-	console.log('before unload');
-	//needsUpdate = true;
-};
+const colNamesMap = new Map([
+  	[checkCol, 'удал'],
+  	[stationCol, 'источник'],
+  	[channelCol, 'канал'],
+  	[valCol, 'индик'],
+	[nameCol, 'имя'],
+	[triggerCol, 'тип'],
+	[initCol, 'уровень вкл'],
+	[stopCol, 'уровень выкл'],
+	[staCol, 'STA/длит'],
+	[filterCol, 'фильтр'],
+	[freqminCol, 'част.мин'],
+	[freqmaxCol, 'част.макс']
+]);
 
 var HeadersOrig = document.getElementById("triggerTable").rows[0].cloneNode(true);
 console.log("init page");
