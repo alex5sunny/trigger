@@ -71,9 +71,14 @@ function setInputFilter(textbox, inputFilter) {
 }
 
 function initHeaders(headerRow)	{
-	headerRow.children[staCol].textContent = "STA(len)";
-	headerRow.children[ltaCol].textContent = "LTA";
-	headerRow.children[triggerCol].textContent = "type";
+//	headerRow.children[staCol].textContent = "STA(len)";
+//	headerRow.children[ltaCol].textContent = "LTA";
+//	headerRow.children[triggerCol].textContent = "type";
+	for (let i = 0; i < 20; i++)	{
+		if (colNamesMap.has(i))    {
+			headerRow.children[i].textContent = colNamesMap.get(i)
+		}
+	}
 	headerRow.children[indexCol].style.display = "none";
 }
 
