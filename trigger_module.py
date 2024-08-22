@@ -50,7 +50,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
         web_ui_dir = os.path.join(os.path.dirname(__file__), "backend")
         # self._print('Initializing trigger module...')
         super().__init__(standalone, config_params, njsp, logger_config, web_ui_dir=web_ui_dir)
-        self.message = 'starting...'
+        self.message = 'запускается...'
         config = self.get_config()
         # self._print('config:\n' + str(config) + '\n')
         self.restarting = False
@@ -141,7 +141,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             self.config.set_config(config)
             self.config.error = None
         logger = self.logger
-        self.message = 'Starting...'
+        self.message = 'запускается...'
         base_params = {
             'reconnect': True,
             'reconnect_period': 30,
@@ -199,11 +199,12 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             glob.CONN_STATE = ConnState.CONNECTING
             while not glob.restart and not self.shutdown_event.is_set():
                 if glob.CONN_STATE != ConnState.CONNECTED:
-                    self.message = glob.CONN_STATE.name.lower()
+                    self.message = ('соединянется' if glob.CONN_STATE == glob.CONN_STATE.CONNECTING else
+                        'нет соединения')
                 elif any(glob.LAST_RTRIGGERINGS.values()):
-                    self.message = 'TRIGGERED'
+                    self.message = 'СРАБОТАЛ'
                 else:
-                    self.message = 'running'
+                    self.message = 'запущен'
                 cur_time = UTCDateTime()
                 try:
                     packets_data = njsp_queue.get(timeout=1)
@@ -295,5 +296,5 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 sleep(.1)
 
         self.module_alive = False
-        self.message = 'Stopped'
+        self.message = 'остановлен'
         # self._print('Main thread exited')

@@ -2,7 +2,7 @@
     "class": "int_sw_module",
     "enabled": true,
     "group": "applications",
-    "name": "Trigger Module",
+    "name": "Тригер",
     "path": "trigger/trigger_module.py",
     "sort": 130,
     "visible": true
