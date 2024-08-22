@@ -14,6 +14,24 @@ var portCol = headersObj["port"];
 var streamCol = headersObj["stream"];
 var outPortCol = headersObj["out port"];
 
+const colNamesMap = new Map([
+	['del', 'удал'],
+	['station', 'источник'],
+	['host', 'ip адрес'],
+	['port', 'порт'],
+	['stream', 'поток'],
+	['out port', 'вых.порт'],
+	['channels', 'каналы'],
+	['units', 'ед.изм']
+])
+
+var headerCells = document.getElementById("sourcesTable").rows[0].children;
+for (var i = 0; i < headerCells.length; i++)  {
+    if (colNamesMap.has(headerCells[i].textContent))	{
+		headerCells[i].textContent = colNamesMap.get(headerCells[i].textContent);
+	}
+}
+
 function apply_save() {
 	checkNames();
 	var rows = document.getElementById("sourcesTable").rows;
@@ -21,6 +39,13 @@ function apply_save() {
 		for (var col of [stationCol, hostCol, portCol, outPortCol])	{
 			var valNode = row.cells[col].children[0];
 			valNode.setAttribute("value", valNode.value);
+		}
+	}
+	var headerCells = document.getElementById("sourcesTable").rows[0].children;
+	var revMap = reverseMap(colNamesMap)
+	for (var i = 0; i < headerCells.length; i++)  {
+		if (revMap.has(headerCells[i].textContent))	{
+			headerCells[i].textContent = revMap.get(headerCells[i].textContent);
 		}
 	}
     sendHTML();
@@ -102,4 +127,12 @@ function removeSource(row)	{
 	if (rows.length > 1)	{
 		table.children[0].removeChild(row);
 	}
+}
+
+function reverseMap(aMap)	{
+	let res = new Map()
+	aMap.forEach (function(value, key) {
+  		res.set(value, key);
+	})
+	return res
 }
