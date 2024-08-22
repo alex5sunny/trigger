@@ -39,7 +39,20 @@ const colNamesMap = new Map([
 ]);
 
 var HeadersOrig = document.getElementById("triggerTable").rows[0].cloneNode(true);
-console.log("init page");
+
+const typesNamesMap = new Map([
+	['level', 'уровень'],
+	['RMS', 'среднекв']
+])
+
+function reverseMap(aMap)	{
+	let res = new Map()
+	aMap.forEach (function(value, key) {
+  		res.set(value, key);
+	})
+	return res
+}
+
 initPage();
 
 var stationsData;
@@ -71,9 +84,6 @@ function setInputFilter(textbox, inputFilter) {
 }
 
 function initHeaders(headerRow)	{
-//	headerRow.children[staCol].textContent = "STA(len)";
-//	headerRow.children[ltaCol].textContent = "LTA";
-//	headerRow.children[triggerCol].textContent = "type";
 	for (let i = 0; i < 20; i++)	{
 		if (colNamesMap.has(i))    {
 			headerRow.children[i].textContent = colNamesMap.get(i)
@@ -86,6 +96,7 @@ function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
 	initHeaders(headerRow)
+	setTypesNames(typesNamesMap)
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () {
@@ -135,6 +146,7 @@ function apply_save() {
 	for (let i = 0; i < headerRow.children.length; i++) {
   		headerRow.children[i].textContent = HeadersOrig.children[i].textContent;
 	}
+	setTypesNames(reverseMap(typesNamesMap));
 	genNames();
     apply();
     sendHTML();
@@ -193,13 +205,14 @@ function sendHTML() {
 }
 
 function nullifyVals()	{
-	var rows = document.getElementById("triggerTable").rows;
+	var rows = document.getElementById("triggerTable").rows
 	for (var j = 1; j < rows.length; j++) {
 		var imgNode = rows[j].cells[valCol].children[0];
 	    imgNode.setAttribute("src", "img\\circle-gray.jpg");
 	}
-	var headerRow = document.getElementById("triggerTable").rows[0];
-	initHeaders(headerRow);
+	var headerRow = document.getElementById("triggerTable").rows[0]
+	initHeaders(headerRow)
+	setTypesNames(typesNamesMap)
 }
 
 setTimeout(updateFunc, 1000);
@@ -284,8 +297,8 @@ function setTriggerVals(triggers) {
 	var rows = document.getElementById("triggerTable").rows;
 	if (rows.length > 1) {
 		for (var i = 1;  i < rows.length; i++) {
-		    row = rows[i];
-		    ind = row.cells[indexCol].innerHTML;
+		    let row = rows[i];
+		    let ind = row.cells[indexCol].innerHTML;
 		    //console.log('ind:' + ind + ' triggers keys:' + Object.keys(triggers));
 		    if (ind in triggers) {
 		    	var imgNode = row.cells[valCol].children[0];
@@ -619,3 +632,17 @@ function removeTrigger(row)	{
 	}
 }
 
+function setTypesNames(namesMap) {
+	var rows = document.getElementById("triggerTable").rows;
+	if (rows.length > 1) {
+		for (var i = 1;  i < rows.length; i++) {
+			var options = rows[i].cells[triggerCol].children[0].options;
+			for (var j = 0; j < options.length; j++)	{
+				var option = options[j];
+				if (namesMap.has(option.textContent))	{
+					option.textContent = namesMap.get(option.textContent)
+				}
+			}
+		}
+	}
+}
