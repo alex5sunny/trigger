@@ -532,7 +532,8 @@ function markTexts()	{
 	var texts = []
 	var delta = 0.001
 	for (const t of MARKERS_DATA.keys()) {
-		texts[texts.length] = '' + MARKERS_DATA.get(t)['azimuth1'] + '<br>' + MARKERS_DATA.get(t)['azimuth2']
+		texts[texts.length] = '<b><i>' + MARKERS_DATA.get(t)['azimuth1'] + '<br>' +
+			MARKERS_DATA.get(t)['azimuth2'] + '</i></b>'
 	}
 	return texts
 }
@@ -560,21 +561,27 @@ Plotly.newPlot('graph',
         {
             mode: 'markers+text',
             textposition: 'top',
-            line: {color: 'red'}
+			textfont: {
+                size: 15
+            },
+            line: {color: 'red'},
+			marker: {
+                size: 20,
+                symbol: ['6']
+            }
         }
     ]
 );
 
 
 setInterval(function() {
-    var date = new Date()
     var times = genTimes(GRAPH_DATA.endtime, GRAPH_DATA.ch1.length)
     actualizeMarkers()
     Plotly.update(
         'graph',
         {
-            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, []],
-            x: [times, times, times, []],
+            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, [0]],
+            x: [times, times, times, Array.from(MARKERS_DATA.keys())],
             text: [[], [], [], []]
         }
     )
