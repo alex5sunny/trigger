@@ -577,12 +577,13 @@ Plotly.newPlot('graph',
 setInterval(function() {
     var times = genTimes(GRAPH_DATA.endtime, GRAPH_DATA.ch1.length)
     actualizeMarkers()
+	var markersArray = Array.from(MARKERS_DATA.keys())
     Plotly.update(
         'graph',
         {
-            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, [0]],
-            x: [times, times, times, Array.from(MARKERS_DATA.keys())],
-            text: [[], [], [], []]
+            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, Array(markersArray.length).fill(0)],
+            x: [times, times, times, markersArray],
+            text: [[], [], [], markTexts()]
         }
     )
 }, 1000)
