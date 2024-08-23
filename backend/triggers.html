@@ -1,11 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-
-<head>
-    <title>таблица тригеров</title>
+<head><title>&#1090;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072;
+    &#1090;&#1088;&#1080;&#1075;&#1077;&#1088;&#1086;&#1074;</title>
     <meta charset="utf-8"/>
 </head>
-
 <body wfd-invisible="true">
 <table style="width: 100%" id="triggerTable">
     <tbody>
@@ -31,141 +29,43 @@
         </td>
         <td style="display: none;" wfd-invisible="true">2</td>
         <td>
-            <input value="chan1" size="6" style="width: 50px;"/></td>
+            <input value="delay" size="6" style="width: 50px;"/></td>
         <td>
             <select onchange="stationChange(this)">
-                <option selected="selected">NRAD</option>
+                <option selected="selected">NADC</option>
+                <option>NENV</option>
             </select></td>
         <td>
             <select>
                 <option selected="selected">ch1</option>
                 <option>ch2</option>
                 <option>ch3</option>
+                <option>ch4</option>
+                <option>ch5</option>
+                <option>ch6</option>
             </select></td>
         <td>
             <select onchange="setUnits(this.parentNode.parentNode)">
-                <option selected="selected">STA/LTA</option>
+                <option>STA/LTA</option>
                 <option>RMS</option>
-                <option>level</option>
+                <option selected="selected">level</option>
             </select></td>
         <td>
-            <input type="numeric" value="0.02" size="2" style="text-align: right; display: inline; width: 42px;"/>
-            <output style="display: inline;">с</output>
+            <input type="numeric" value="0.150" size="2" style="text-align: right; display: inline; width: 42px;"/>
+            <output style="display: inline;">&#1089;</output>
         </td>
         <td contenteditable="true">
-            <input type="numeric" value="2" size="2" style="text-align: right; display: inline; width: 42px;"
+            <input type="numeric" value="2" size="2" style="text-align: right; display: none; width: 42px;"
                    wfd-invisible="true"/>
-            <output style="display: inline;">с</output>
+            <output style="display: none;">&#1089;</output>
         </td>
         <td>
-            <input type="numeric" value="5" size="5" style="text-align: right; width: 50px;"/>
-            <output/>
+            <input type="numeric" value="0.00108" size="5" style="text-align: right; width: 50px;"/>
+            <output>V</output>
         </td>
         <td>
-            <input type="numeric" value="5" size="5" style="text-align: right; width: 50px;"/>
-            <output/>
-        </td>
-        <td>
-            <input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
-        <td>
-            <input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
-        </td>
-        <td>
-            <input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
-        </td>
-        <td>
-            <img src="img\circle-gray.jpg"/></td>
-    </tr>
-    <tr>
-        <td>
-            <button type="button" style="color: red;" onclick="removeTrigger(this.parentNode.parentNode)">X</button>
-        </td>
-        <td style="display: none;" wfd-invisible="true">3</td>
-        <td>
-            <input value="chan2" size="6" style="width: 50px;"/></td>
-        <td>
-            <select onchange="stationChange(this)">
-                <option selected="selected">NRAD</option>
-            </select></td>
-        <td>
-            <select>
-                <option>ch1</option>
-                <option selected="selected">ch2</option>
-                <option>ch3</option>
-            </select></td>
-        <td>
-            <select onchange="setUnits(this.parentNode.parentNode)">
-                <option selected="selected">STA/LTA</option>
-                <option>RMS</option>
-                <option>level</option>
-            </select></td>
-        <td>
-            <input type="numeric" value="0.02" size="2" style="text-align: right; display: inline; width: 42px;"/>
-            <output style="display: inline;">с</output>
-        </td>
-        <td contenteditable="true">
-            <input type="numeric" value="2" size="2" style="text-align: right; display: inline; width: 42px;"
-                   wfd-invisible="true"/>
-            <output style="display: inline;">с</output>
-        </td>
-        <td>
-            <input type="numeric" value="5" size="5" style="text-align: right; width: 50px;"/>
-            <output/>
-        </td>
-        <td>
-            <input type="numeric" value="5" size="5" style="text-align: right; width: 50px;"/>
-            <output/>
-        </td>
-        <td>
-            <input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
-        <td>
-            <input type="numeric" value="100" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
-        </td>
-        <td>
-            <input type="numeric" value="300" size="2" style="text-align: right; display: none;" wfd-invisible="true"/>
-        </td>
-        <td>
-            <img src="img\circle-gray.jpg"/></td>
-    </tr>
-    <tr>
-        <td>
-            <button type="button" style="color: red;" onclick="removeTrigger(this.parentNode.parentNode)">X</button>
-        </td>
-        <td style="display: none;" wfd-invisible="true">4</td>
-        <td>
-            <input value="chan3" size="6" style="width: 50px;"/></td>
-        <td>
-            <select onchange="stationChange(this)">
-                <option selected="selected">NRAD</option>
-            </select></td>
-        <td>
-            <select>
-                <option>ch1</option>
-                <option>ch2</option>
-                <option selected="selected">ch3</option>
-            </select></td>
-        <td>
-            <select onchange="setUnits(this.parentNode.parentNode)">
-                <option selected="selected">STA/LTA</option>
-                <option>RMS</option>
-                <option>level</option>
-            </select></td>
-        <td>
-            <input type="numeric" value="0.02" size="2" style="text-align: right; display: inline; width: 42px;"/>
-            <output style="display: inline;">с</output>
-        </td>
-        <td>
-            <input type="numeric" value="2" size="2" style="text-align: right; display: inline;  width: 42px;"
-                   wfd-invisible="true"/>
-            <output style="display: inline;">с</output>
-        </td>
-        <td>
-            <input type="numeric" value="20" size="5" style="text-align: right; width: 50px;"/>
-            <output/>
-        </td>
-        <td>
-            <input type="numeric" value="10" size="5" style="text-align: right; width: 50px;"/>
-            <output/>
+            <input type="numeric" value="0.00108" size="5" style="text-align: right; width: 50px;"/>
+            <output>V</output>
         </td>
         <td>
             <input type="checkbox" onchange="setFrequencesVisibility(this.parentNode.parentNode)"/></td>
@@ -181,18 +81,18 @@
     </tbody>
 </table>
 <p style="text-align: left;">
-    <a href="index.html">на главную</a>
-    <a href="rules.html">правила</a>
+    <a href="index.html">&#1085;&#1072; &#1075;&#1083;&#1072;&#1074;&#1085;&#1091;&#1102;</a>
+    <a href="rules.html">&#1087;&#1088;&#1072;&#1074;&#1080;&#1083;&#1072;</a>
     <span style="float: right;">
-				<button type="button" onclick="addTrigger()">добавить</button>
+				<button type="button"
+                        onclick="addTrigger()">&#1076;&#1086;&#1073;&#1072;&#1074;&#1080;&#1090;&#1100;</button>
 				<button type="button" onclick="location.reload(true)">
-				отмена</button>
-				<button type="button" onclick="apply_save()">применить</button>
+				&#1086;&#1090;&#1084;&#1077;&#1085;&#1072;</button>
+				<button type="button" onclick="apply_save()">&#1087;&#1088;&#1080;&#1084;&#1077;&#1085;&#1080;&#1090;&#1100;</button>
 			</span>
 </p>
 <script src="triggers.js" wfd-invisible="true">
 
 </script>
 </body>
-
 </html>

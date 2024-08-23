@@ -39,6 +39,8 @@ class LevelTrigger:
         self.count = 0
 
     def trigger(self, data):
+        if not self.npts:
+            return data
         n = len(data)
         data_out = np.array([0.0] * n)
         i = 0

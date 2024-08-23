@@ -1,6 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<head><title>rules table</title></head>
+<head>
+    <meta charset="utf-8"/>
+    <title>&#1090;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; &#1087;&#1088;&#1072;&#1074;&#1080;&#1083;</title></head>
 <body>
 <table style="width: 100%" id="rulesTable">
     <tbody>
@@ -18,19 +20,8 @@
         <td style="display: none;">1</td>
         <td>
             <select class="trigger">
-                <option trigger_id="2" selected="selected">chan1</option>
-                <option trigger_id="3">chan2</option>
-                <option trigger_id="4">chan3</option>
-            </select><img src="img\gray16.jpg"/><select class="operation">
-            <option>and</option>
-            <option>and not</option>
-            <option selected="selected">or</option>
-            <option>or not</option>
-        </select><select class="trigger">
-            <option trigger_id="2">chan1</option>
-            <option trigger_id="3" selected="selected">chan2</option>
-            <option trigger_id="4">chan3</option>
-        </select><img src="img\gray16.jpg"/>
+                <option trigger_id="2" selected="selected">delay</option>
+            </select><img src="img\gray16.jpg"/>
             <button type="button" style="font-weight: bold; color: green" onclick="addTrigger(this)">+</button>
             <button type="button" style="color: red;" onclick="removeTrigger(this.parentNode)">X</button>
         </td>
@@ -50,13 +41,16 @@
     </tbody>
 </table>
 <p style="text-align: left;">
-    <a href="index.html">main</a>
-    <a href="triggers.html">triggers</a>
-    <a href="actions.html">actions</a>
+    <a href="index.html">&#1085;&#1072; &#1075;&#1083;&#1072;&#1074;&#1085;&#1091;&#1102;</a>
+    <a href="triggers.html">&#1090;&#1088;&#1080;&#1075;&#1077;&#1088;&#1099;</a>
+    <a href="actions.html">&#1076;&#1077;&#1081;&#1089;&#1090;&#1074;&#1080;&#1103;</a>
     <span style="float: right;">
-				<button type="button" onclick="addRule()">add rule</button>
-				<button type="button" onclick="location.reload(true)">discard</button>
-				<button type="button" onclick="apply()">apply</button>
+				<button type="button"
+                        onclick="addRule()">&#1076;&#1086;&#1073;&#1072;&#1074;&#1080;&#1090;&#1100;</button>
+				<button type="button"
+                        onclick="location.reload(true)">&#1086;&#1090;&#1084;&#1077;&#1085;&#1072;</button>
+				<button type="button"
+                        onclick="apply()">&#1087;&#1088;&#1080;&#1084;&#1077;&#1085;&#1080;&#1090;&#1100;</button>
 			</span>
 </p>
 <script src="rules.js">
