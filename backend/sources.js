@@ -128,11 +128,3 @@ function removeSource(row)	{
 		table.children[0].removeChild(row);
 	}
 }
-
-function reverseMap(aMap)	{
-	let res = new Map()
-	aMap.forEach (function(value, key) {
-  		res.set(value, key);
-	})
-	return res
-}

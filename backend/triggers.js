@@ -45,14 +45,6 @@ const typesNamesMap = new Map([
 	['RMS', 'среднекв']
 ])
 
-function reverseMap(aMap)	{
-	let res = new Map()
-	aMap.forEach (function(value, key) {
-  		res.set(value, key);
-	})
-	return res
-}
-
 initPage();
 
 var stationsData;
@@ -96,7 +88,7 @@ function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
 	initHeaders(headerRow)
-	setTypesNames(typesNamesMap)
+	setOptionsNames(typesNamesMap, document.getElementById("triggerTable"))
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () {
@@ -146,7 +138,7 @@ function apply_save() {
 	for (let i = 0; i < headerRow.children.length; i++) {
   		headerRow.children[i].textContent = HeadersOrig.children[i].textContent;
 	}
-	setTypesNames(reverseMap(typesNamesMap));
+	setOptionsNames(reverseMap(typesNamesMap), document.getElementById("triggerTable"))
 	genNames();
     apply();
     sendHTML();
@@ -212,7 +204,7 @@ function nullifyVals()	{
 	}
 	var headerRow = document.getElementById("triggerTable").rows[0]
 	initHeaders(headerRow)
-	setTypesNames(typesNamesMap)
+	setOptionsNames(typesNamesMap, document.getElementById("triggerTable"))
 }
 
 setTimeout(updateFunc, 1000);
@@ -629,20 +621,5 @@ function removeTrigger(row)	{
 	var rows = Array.from(table.rows).slice(1);
 	if (rows.length > 1)	{
 		table.children[0].removeChild(row);
-	}
-}
-
-function setTypesNames(namesMap) {
-	var rows = document.getElementById("triggerTable").rows;
-	if (rows.length > 1) {
-		for (var i = 1;  i < rows.length; i++) {
-			var options = rows[i].cells[triggerCol].children[0].options;
-			for (var j = 0; j < options.length; j++)	{
-				var option = options[j];
-				if (namesMap.has(option.textContent))	{
-					option.textContent = namesMap.get(option.textContent)
-				}
-			}
-		}
 	}
 }
