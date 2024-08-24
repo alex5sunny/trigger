@@ -14,23 +14,7 @@ var portCol = headersObj["port"];
 var streamCol = headersObj["stream"];
 var outPortCol = headersObj["out port"];
 
-const colNamesMap = new Map([
-	['del', 'удал'],
-	['station', 'источник'],
-	['host', 'ip адрес'],
-	['port', 'порт'],
-	['stream', 'поток'],
-	['out port', 'вых.порт'],
-	['channels', 'каналы'],
-	['units', 'ед.изм']
-])
-
-var headerCells = document.getElementById("sourcesTable").rows[0].children;
-for (var i = 0; i < headerCells.length; i++)  {
-    if (colNamesMap.has(headerCells[i].textContent))	{
-		headerCells[i].textContent = colNamesMap.get(headerCells[i].textContent);
-	}
-}
+setHeaders(COL_NAMES_MAP, document.getElementById("sourcesTable"))
 
 function apply_save() {
 	checkNames();
@@ -41,13 +25,7 @@ function apply_save() {
 			valNode.setAttribute("value", valNode.value);
 		}
 	}
-	var headerCells = document.getElementById("sourcesTable").rows[0].children;
-	var revMap = reverseMap(colNamesMap)
-	for (var i = 0; i < headerCells.length; i++)  {
-		if (revMap.has(headerCells[i].textContent))	{
-			headerCells[i].textContent = revMap.get(headerCells[i].textContent);
-		}
-	}
+	setHeaders(reverseMap(COL_NAMES_MAP), document.getElementById("sourcesTable"))
     sendHTML();
 	setTimeout(function()	{
 		location.reload(true);

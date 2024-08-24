@@ -111,6 +111,8 @@ function updateFunc () {
 }
 
 function initFunc () {
+	setHeaders(reverseMap(COL_NAMES_MAP), document.getElementById("rulesTable"))
+
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "initRule", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
@@ -278,6 +280,7 @@ function apply()	{
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-Type", "application/html");
 
+	setHeaders(reverseMap(COL_NAMES_MAP), table)
 	var pageHTML = "<html>\n" + document.documentElement.innerHTML + "\n</html>";
 	var data = JSON.stringify({"html": pageHTML, "sessionId":  sessionId});
 	xhr.send(data);
@@ -286,6 +289,7 @@ function apply()	{
 
 function nullifyVals()	{
 	//console.log('time out');
+	setHeaders(COL_NAMES_MAP, document.getElementById("rulesTable"))
 	var rows = document.getElementById("rulesTable").rows;
 	for (var i = 1; i < rows.length; i++) {
 		var imgNode = rows[i].cells[ruleValCol].children[0];

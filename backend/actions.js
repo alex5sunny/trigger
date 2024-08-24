@@ -30,6 +30,8 @@ var additionalCol = headersObj["additional"];
 document.getElementById("petA").disabled = document.getElementById("infiniteA").checked;
 document.getElementById("petB").disabled = document.getElementById("infiniteB").checked;
 
+setHeaders(COL_NAMES_MAP, getTable())
+
 function cycleFunc(f)	{
 	var retVal = [];
 	var rows = getRows();
@@ -134,8 +136,10 @@ function apply()	{
 	var url = "applyActions";
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-Type", "application/html");
+	setHeaders(reverseMap(COL_NAMES_MAP), getTable())
 	var pageHTML = "<html>\n" + document.documentElement.innerHTML + "\n</html>";
 	xhr.send(pageHTML);
+	setHeaders(COL_NAMES_MAP, getTable())
 }
 
 function getId(row)	{

@@ -40,11 +40,6 @@ const colNamesMap = new Map([
 
 var HeadersOrig = document.getElementById("triggerTable").rows[0].cloneNode(true);
 
-const typesNamesMap = new Map([
-	['level', 'уровень'],
-	['RMS', 'среднекв']
-])
-
 initPage();
 
 var stationsData;
@@ -88,7 +83,7 @@ function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
 	initHeaders(headerRow)
-	setOptionsNames(typesNamesMap, document.getElementById("triggerTable"))
+	setOptionsNames(OPTIONS_MAP, document.getElementById("triggerTable"))
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () {
@@ -138,7 +133,7 @@ function apply_save() {
 	for (let i = 0; i < headerRow.children.length; i++) {
   		headerRow.children[i].textContent = HeadersOrig.children[i].textContent;
 	}
-	setOptionsNames(reverseMap(typesNamesMap), document.getElementById("triggerTable"))
+	setOptionsNames(reverseMap(OPTIONS_MAP), document.getElementById("triggerTable"))
 	genNames();
     apply();
     sendHTML();
@@ -204,7 +199,7 @@ function nullifyVals()	{
 	}
 	var headerRow = document.getElementById("triggerTable").rows[0]
 	initHeaders(headerRow)
-	setOptionsNames(typesNamesMap, document.getElementById("triggerTable"))
+	setOptionsNames(OPTIONS_MAP, document.getElementById("triggerTable"))
 }
 
 setTimeout(updateFunc, 1000);
