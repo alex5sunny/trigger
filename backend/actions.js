@@ -31,6 +31,7 @@ document.getElementById("petA").disabled = document.getElementById("infiniteA").
 document.getElementById("petB").disabled = document.getElementById("infiniteB").checked;
 
 setHeaders(COL_NAMES_MAP, getTable())
+rawReplace(RAW_MAP, getTable())
 
 function cycleFunc(f)	{
 	var retVal = [];
@@ -50,7 +51,7 @@ function fhide(row)	{
 
 fhide(getRows()[0]);
 cycleFunc(fhide);
-  
+
 function add() {
 	var table = getTable();
     var rows = getRows();
@@ -75,7 +76,7 @@ function setSelected(node) 	{
 				option.removeAttribute("selected");
 			}
 		}
-	}	
+	}
 }
 
 function setValue(elementId)	{
@@ -105,7 +106,7 @@ function prepareRow(row)	{
 	if (children.length > 0)	{
 		var node = children[0];
 		//console.log('select node inner html:\n' + node.innerHTML);
-		setSelected(node);		
+		setSelected(node);
 	}
 	var additionalCell = cells[additionalCol];
 	children = additionalCell.children;
@@ -121,7 +122,7 @@ function apply()	{
 	}
 	//setValue("PEM");
 	//setValue("PET");
-	
+
 	for (var elementId of ["infiniteA", "infiniteB", "inverseA", "inverseB"])	{
 		setChecked(elementId);
 	}
@@ -137,9 +138,11 @@ function apply()	{
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-Type", "application/html");
 	setHeaders(reverseMap(COL_NAMES_MAP), getTable())
+	rawReplace(reverseMap(RAW_MAP), getTable())
 	var pageHTML = "<html>\n" + document.documentElement.innerHTML + "\n</html>";
 	xhr.send(pageHTML);
 	setHeaders(COL_NAMES_MAP, getTable())
+	rawReplace(RAW_MAP, getTable())
 }
 
 function getId(row)	{

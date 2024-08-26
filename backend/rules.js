@@ -111,7 +111,9 @@ function updateFunc () {
 }
 
 function initFunc () {
-	setHeaders(reverseMap(COL_NAMES_MAP), document.getElementById("rulesTable"))
+	let table = document.getElementById("rulesTable")
+	setHeaders(COL_NAMES_MAP, table)
+	// //*[@id='operation'] -- xpath for operation tag
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "initRule", true);
@@ -161,6 +163,8 @@ function initFunc () {
 				var actionCell = row.cells[actionCol];
 				fillActions(actionCell, prevActionIds);
 			}
+			rawReplace(RAW_MAP, table)
+			setOperations(['и', 'и не', 'или', 'или не'], table)
 			setTimeout(updateFunc, 1000);
 		}
 	}
@@ -281,6 +285,8 @@ function apply()	{
 	xhr.setRequestHeader("Content-Type", "application/html");
 
 	setHeaders(reverseMap(COL_NAMES_MAP), table)
+	rawReplace(reverseMap(RAW_MAP), table)
+	setOperations(['and', 'and not', 'or', 'or not'], table)
 	var pageHTML = "<html>\n" + document.documentElement.innerHTML + "\n</html>";
 	var data = JSON.stringify({"html": pageHTML, "sessionId":  sessionId});
 	xhr.send(data);
@@ -289,8 +295,11 @@ function apply()	{
 
 function nullifyVals()	{
 	//console.log('time out');
-	setHeaders(COL_NAMES_MAP, document.getElementById("rulesTable"))
-	var rows = document.getElementById("rulesTable").rows;
+	let table = document.getElementById("rulesTable")
+	setHeaders(COL_NAMES_MAP, table)
+	rawReplace(RAW_MAP, table)
+	setOperations(['и', 'и не', 'или', 'или не'])
+	var rows = table.rows;
 	for (var i = 1; i < rows.length; i++) {
 		var imgNode = rows[i].cells[ruleValCol].children[0];
 		imgNode.setAttribute("src", "img\\circle-gray.jpg");
@@ -372,7 +381,7 @@ function addTrigger(refNode)	{
 	}
 	var opNode = document.createElement('select');
 	opNode.setAttribute("class", "operation");
-	for (var op of ["and", "and not", "or", "or not"])	{
+	for (var op of ["и", "и не", "или", "или не"])	{
 		var subNode = document.createElement("option");
 		subNode.innerHTML = op;
 		opNode.appendChild(subNode);
@@ -444,4 +453,12 @@ function removeAction(actionCell)	{
 		return;
 	}
 	actionCell.removeChild(nodes[i]);
+}
+
+function setOperations(operations, table)	{
+	for (let operationNode of document.getElementsByClassName('operation'))	{
+    	for (let i = 0; i < 4; i++)  {
+			operationNode.children[i].innerHTML = operations[i]
+    	}
+	}
 }

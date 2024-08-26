@@ -1,3 +1,9 @@
+const RAW_MAP = new Map([
+	['outdata', 'выхДанные'],
+	['relayA', 'релеА'],
+	['relayB', 'релеБ']
+])
+
 const COL_NAMES_MAP = new Map([
 	['del', 'удал'],
 	['station', 'источник'],
@@ -14,7 +20,8 @@ const COL_NAMES_MAP = new Map([
 	['type', 'тип'],
 	['address', 'адрес'],
 	['message', 'сообщение'],
-	['additional', 'дополнительно']
+	['additional', 'дополнительно'],
+	['val', 'индик']
 ])
 
 const OPTIONS_MAP = new Map([
@@ -56,4 +63,12 @@ function setHeaders(namesMap, table)	{
 			headerCells[i].textContent = namesMap.get(headerCells[i].textContent);
 		}
 	}
+}
+
+function rawReplace(namesMap, table)	{
+	var inner_html = table.innerHTML
+	namesMap.forEach (function(value, key) {
+  		inner_html = inner_html.replaceAll(key, value)
+	})
+	table.innerHTML = inner_html
 }
