@@ -49,11 +49,10 @@ class LevelTrigger:
                 if i + self.count >= n:
                     data_out[i:] = [self.level * 1.01] * (n - i)
                     self.count -= n - i
-                    i = n
                 else:
-                    data_out[i: i+self.count+1] = [self.level * 1.01] * self.count + [0]
+                    data_out[i:] = [self.level * 1.01] * self.count + [0] * (n - self.count - i)
                     self.count = 0
-                    i += self.count + 1
+                break
             else:
                 if data[i] >= self.level:
                     self.count = self.npts
@@ -64,7 +63,7 @@ class LevelTrigger:
                         i += offset
                     else:
                         data_out[i:] = [0.0] * (n - i)
-                        i = n
+                        break
         return data_out
 
 
