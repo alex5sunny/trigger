@@ -41,11 +41,11 @@ function reverseMap(aMap)	{
 	return res
 }
 
-function setOptionsNames(namesMap, table) {
+function setOptionsNames(namesMap, table, colNum) {
 	var rows = table.rows // document.getElementById("triggerTable").rows;
 	if (rows.length > 1) {
 		for (var i = 1;  i < rows.length; i++) {
-			var options = rows[i].cells[triggerCol].children[0].options;
+			var options = rows[i].cells[colNum].children[0].options;
 			for (var j = 0; j < options.length; j++)	{
 				var option = options[j];
 				if (namesMap.has(option.textContent))	{

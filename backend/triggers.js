@@ -83,9 +83,10 @@ function initPage() {
 	var xhr = new XMLHttpRequest();
 	var headerRow = document.getElementById("triggerTable").rows[0];
 	initHeaders(headerRow)
-	setOptionsNames(OPTIONS_MAP, document.getElementById("triggerTable"))
+	setOptionsNames(OPTIONS_MAP, document.getElementById("triggerTable"), triggerCol)
 	xhr.open("POST", "initTrigger", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
+	resetSelectedTriggers()
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4 && xhr.status === 200) {
 			stationsData = JSON.parse(xhr.responseText);
@@ -133,7 +134,7 @@ function apply_save() {
 	for (let i = 0; i < headerRow.children.length; i++) {
   		headerRow.children[i].textContent = HeadersOrig.children[i].textContent;
 	}
-	setOptionsNames(reverseMap(OPTIONS_MAP), document.getElementById("triggerTable"))
+	setOptionsNames(reverseMap(OPTIONS_MAP), document.getElementById("triggerTable"), triggerCol)
 	genNames();
     apply();
     sendHTML();
@@ -199,7 +200,7 @@ function nullifyVals()	{
 	}
 	var headerRow = document.getElementById("triggerTable").rows[0]
 	initHeaders(headerRow)
-	setOptionsNames(OPTIONS_MAP, document.getElementById("triggerTable"))
+	setOptionsNames(OPTIONS_MAP, document.getElementById("triggerTable"), triggerCol)
 }
 
 setTimeout(updateFunc, 1000);
@@ -379,6 +380,21 @@ function setSelectedTriggers() {
 				}
 				else {
 					option.removeAttribute("selected");
+				}
+			}
+		}
+	}
+}
+
+function resetSelectedTriggers() {
+	var rows = document.getElementById("triggerTable").rows;
+	if (rows.length > 1) {
+		for (var i = 1;  i < rows.length; i++) {
+			var options = rows[i].cells[triggerCol].children[0].options;
+			for (var j = 0; j < options.length; j++)	{
+				var option = options[j];
+				if (option.hasAttribute("selected"))	{
+					options.selectedIndex = j
 				}
 			}
 		}
