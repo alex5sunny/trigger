@@ -49,7 +49,7 @@ function checkInt(value) {
 }
 
 function checkFloat(value) {
-	return /^-?\d*[.,]?\d*$/.test(value) && (value === "" || parseFloat(value) < 100);
+	return /^-?\d*[.]?\d*$/.test(value) && (value === "" || parseFloat(value) < 100);
 }
 
 function setInputFilter(textbox, inputFilter) {
