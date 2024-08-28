@@ -91,7 +91,7 @@ function updateFunc () {
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4) {
 		    if (xhr.status === 200)    {
-                respObj = JSON.parse(xhr.responseText);
+                var respObj = JSON.parse(xhr.responseText);
 				if ('endtime' in respObj)	{
 					// console.log('npts:' + respObj['ch1'].length);
 					GRAPH_DATA['endtime'] = new Date(respObj['endtime'])
@@ -105,11 +105,10 @@ function updateFunc () {
 					console.log('response:' + xhr.responseText);
 				}
 				if ('events' in respObj)	{
-				    document.getElementById('ruleTimes').innerHTML =
-						(respObj.events + '<br>' +
-						 document.getElementById('ruleTimes').innerHTML).substring(0, 2000);
+				    document.getElementById('ruleTimes').innerHTML = ''
 					respObj.events = JSON.parse(respObj.events);
 					for (let ev of respObj.events)	{
+						document.getElementById('ruleTimes').innerHTML += ev;
 						// var d = new Date(ev.t3)
 						// console.log('ev:' + ev + ' t3:' + ev.t3 + ' d:' + d)
 						MARKERS_DATA.set(new Date(ev.t3), {azimuth1: ev.azimuth1, azimuth2: ev.azimuth2});

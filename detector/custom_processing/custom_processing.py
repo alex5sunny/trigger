@@ -29,10 +29,6 @@ def process_custom_data(context: dict, data_buf_duration: int, data_shift: int) 
     return res
 
 
-def dics_to_log(dics_log: List[dict]) -> str:
-    res = ''
-    for dic_log in dics_log:
-        for ke, val in dic_log.items():
-            res += f'{ke}: {val}\n'
-        res += '\n'
-    return res
+def remove_dups(list_log: List[dict]) -> List[dict]:
+    tups_list = sorted([tuple(dic.items()) for dic in list_log], reverse=True)
+    return [dict(tup) for tup in tups_list]

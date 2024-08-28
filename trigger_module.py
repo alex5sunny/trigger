@@ -29,7 +29,7 @@ from detector.filter_trigger.rule import rule_picker
 from detector.misc.misc_util import fill_out_triggerings, append_test_triggerings, \
     to_actions_triggerings, group_triggerings
 
-from detector.custom_processing.custom_processing import create_context, process_custom_data
+from detector.custom_processing.custom_processing import create_context, process_custom_data, remove_dups
 
 
 class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
@@ -97,7 +97,6 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 response_dic['rules'] = rules_out
                 if glob.LIST_LOG:
                     response_dic['events'] = json.dumps(glob.LIST_LOG)
-                    glob.LIST_LOG.clear()
                 if len(glob.GRAPH_DATA['ch1']):
                     response_dic['endtime'] = glob.GRAPH_DATA['endtime']
                     [response_dic.update({f'ch{i}': glob.GRAPH_DATA[f'ch{i}'].tolist()}) for i in range(1, 4)]
@@ -291,6 +290,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                     if list_log:
                         glob.logger.debug('list log:' + str(list_log))
                         glob.LIST_LOG.extend(list_log)
+                        glob.LIST_LOG = remove_dups(glob.LIST_LOG)
                         glob.LIST_LOG[:-10] = []
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings_dic, actions_triggerings)
