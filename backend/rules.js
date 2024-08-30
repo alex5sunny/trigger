@@ -95,7 +95,7 @@ function updateFunc () {
 				if ('endtime' in respObj)	{
 					// console.log('npts:' + respObj['ch1'].length);
 					GRAPH_DATA['endtime'] = new Date(respObj['endtime'])
-					for (let chan of ['ch1', 'ch2', 'ch3']) {
+					for (var chan of ['ch1', 'ch2', 'ch3']) {
 						GRAPH_DATA[chan].push(...respObj[chan])
 						if (GRAPH_DATA[chan].length > 5000)	{
 							GRAPH_DATA[chan].splice(0, GRAPH_DATA[chan].length - 5000)
@@ -107,11 +107,20 @@ function updateFunc () {
 				if ('events' in respObj)	{
 				    document.getElementById('ruleTimes').innerHTML = ''
 					respObj.events = JSON.parse(respObj.events);
-					for (let ev of respObj.events)	{
-						document.getElementById('ruleTimes').innerHTML += ev;
+					console.log('events:' + JSON.stringify(respObj.events))
+					for (var ev of respObj.events)	{
+						var evStr = ''
+						for (var ke of ['t1', 't2', 't3'])	{
+							evStr += ke + ':' + ev[ke].split(' ').at(-1) + ' '
+						}
+						for (var ke of ['azimuth1', 'azimuth2'])	{
+							evStr += ke + ':' + ev[ke] + ' '
+						}
+						document.getElementById('ruleTimes').innerHTML = evStr + '<br>'
+							+ document.getElementById('ruleTimes').innerHTML
 						// var d = new Date(ev.t3)
 						// console.log('ev:' + ev + ' t3:' + ev.t3 + ' d:' + d)
-						MARKERS_DATA.set(new Date(ev.t3), {azimuth1: ev.azimuth1, azimuth2: ev.azimuth2});
+						MARKERS_DATA.set((new Date(ev.t3)).getTime(), {azimuth1: ev.azimuth1, azimuth2: ev.azimuth2});
 						// console.log('keys:' + Array.from( MARKERS_DATA.keys() ));
 					}
 				}
@@ -510,7 +519,7 @@ function actualizeMarkers()	{
 		var back_time = new Date(endtime)
 		back_time.setSeconds(back_time.getSeconds() - 5)
 		// console.log('ke:' + ke + ' back_time:' + back_time)
-		if (MARKERS_DATA.has(ke) && ke < back_time)	{
+		if (MARKERS_DATA.has(ke) && (new Date(ke)) < back_time)	{
 			MARKERS_DATA.delete(ke);
 		}
 	}
@@ -521,7 +530,7 @@ function markY()	{
 	var n = GRAPH_DATA.ch3.length
 	var delta = 0.001
 	for (const t of MARKERS_DATA.keys()) {
-		var ind = Math.round((t - GRAPH_DATA.endtime + n * delta) / delta);
+		var ind = Math.round(((new Date(t)) - GRAPH_DATA.endtime + n * delta) / delta);
 		ys[ys.length] = GRAPH_DATA.ch3[ind]
 	}
 	return ys
@@ -576,7 +585,10 @@ Plotly.newPlot('graph',
 setInterval(function() {
     var times = genTimes(GRAPH_DATA.endtime, GRAPH_DATA.ch1.length)
     actualizeMarkers()
-	var markersArray = Array.from(MARKERS_DATA.keys())
+	var markersArray = []
+	for (var t of Array.from(MARKERS_DATA.keys()))	{
+		markersArray[markersArray.length] = new Date(t)
+	}
     Plotly.update(
         'graph',
         {

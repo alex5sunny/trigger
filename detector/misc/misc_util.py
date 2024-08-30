@@ -123,6 +123,5 @@ def append_to_graph(prev_data: np.ndarray, new_data: np.ndarray) -> np.ndarray:
     return res if len(res) <= 5000 else res[-1000:]
 
 
-def log(mes: str):
-    logger.debug(mes)
-
+def get_logger() -> logging.Logger:
+    return logger

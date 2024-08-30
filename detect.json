@@ -1,6 +1,6 @@
 {
     "class": "int_sw_module",
-    "enabled": true,
+    "enabled": false,
     "group": "applications",
     "name": "Trigger Module",
     "path": "trigger/trigger_module.py",

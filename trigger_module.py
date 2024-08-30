@@ -15,7 +15,7 @@ sys.path.append(os.path.dirname(__file__))
 
 import detector.misc.globals as glob
 from detector.misc.misc_util import get_station_for_stream, split_params, split_streams, check_break, get_endtime, \
-    append_to_graph, log
+    append_to_graph
 from detector.action.action_pipe import execute_action
 from detector.filter_trigger.construct_triggers import construct_triggers
 
@@ -288,9 +288,9 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                     # custom_picker(triggerings, glob.POSITIVES_TIMES, glob.RULE_TIMES, coords)
                     list_log = process_custom_data(custom_context, glob.DATA_BUF_DURATION, glob.DATA_SHIFT)
                     if list_log:
-                        glob.logger.debug('list log:' + str(list_log))
                         glob.LIST_LOG.extend(list_log)
                         glob.LIST_LOG = remove_dups(glob.LIST_LOG)
+                        glob.logger.debug('list log:' + str(list_log))
                         glob.LIST_LOG[:-10] = []
                     # logger.debug(f'rules_triggerings:{rules_triggerings}')
                     to_actions_triggerings(rules_triggerings, rules_settings_dic, actions_triggerings)
