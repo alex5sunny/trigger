@@ -113,10 +113,10 @@ function updateFunc () {
 					for (var ev of respObj.events)	{
 						var evStr = ''
 						for (var ke of ['t1', 't2', 't3'])	{
-							evStr += ke + ':' + ev[ke].split(' ').at(-1) + ' '
+							evStr += ke + ':' + ev[ke].split(' ').at(-1) + '\xa0\xa0\xa0'
 						}
 						for (var ke of ['azimuth1', 'azimuth2'])	{
-							evStr += ke + ':' + ev[ke] + ' '
+							evStr += ke + ':' + ev[ke] + '\xa0\xa0\xa0'
 						}
 						document.getElementById('ruleTimes').innerHTML = evStr + '<br>'
 							+ document.getElementById('ruleTimes').innerHTML

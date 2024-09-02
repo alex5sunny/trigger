@@ -26,6 +26,8 @@ logger = logging.getLogger('globals')
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.getLogger("gpsd").setLevel(logging.WARNING)
 
+CHANS = 'ch1 ch2 ch3'.split()
+
 CONNECTION_TOUT = 5000
 PBUF_SIZE = 1002
 ENCODING = 'cp1250'

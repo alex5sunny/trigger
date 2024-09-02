@@ -262,6 +262,8 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                         trigger.set_sample_rate(sample_rates[station])
                             if 'streams' == packet_type:
                                 station = next(iter(content))
+                                if station == 'NENV':
+                                    continue
                                 delta = 1. / sample_rates[station]
                                 check_break(content, packets_q, delta, station)
                                 glob.GRAPH_DATA['endtime'] = get_endtime(content, delta, station)
@@ -272,10 +274,13 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 channels_data = content[station]['samples']
                                 # logger.debug(f'ks keys:{list(ks[station].keys())}')
                                 for chan, bytez in channels_data.items():
+                                    if chan not in glob.CHANS:
+                                        continue
                                     k = ks[station][chan]
                                     data = np.frombuffer(bytez, 'int').astype('float') / k
-                                    custom_context[chan] = np.append(custom_context[chan], data)
-                                    glob.GRAPH_DATA[chan] = append_to_graph(glob.GRAPH_DATA[chan], data)
+                                    ch = f'ch{1 + glob.CHANS.index(chan)}'
+                                    custom_context[ch] = np.append(custom_context[ch], data)
+                                    glob.GRAPH_DATA[ch] = append_to_graph(glob.GRAPH_DATA[ch], data)
                                     for trigger in triggers.get(station, {}).get(chan, []):
                                         triggerings.extend(trigger.pick(starttime, data))
                     triggerings.sort()
