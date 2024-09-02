@@ -1,3 +1,5 @@
+const DATA_LEN = 20000
+
 var headersObj = new Object();
 {
 	var row = document.getElementById("rulesTable").rows[0];
@@ -97,8 +99,8 @@ function updateFunc () {
 					GRAPH_DATA['endtime'] = new Date(respObj['endtime'])
 					for (var chan of ['ch1', 'ch2', 'ch3']) {
 						GRAPH_DATA[chan].push(...respObj[chan])
-						if (GRAPH_DATA[chan].length > 5000)	{
-							GRAPH_DATA[chan].splice(0, GRAPH_DATA[chan].length - 5000)
+						if (GRAPH_DATA[chan].length > DATA_LEN)	{
+							GRAPH_DATA[chan].splice(0, GRAPH_DATA[chan].length - DATA_LEN)
 						}
 					}
 				} else	{
@@ -517,7 +519,7 @@ function actualizeMarkers()	{
 	for (let ke of keys)	{
 		const endtime = GRAPH_DATA['endtime']
 		var back_time = new Date(endtime)
-		back_time.setSeconds(back_time.getSeconds() - 5)
+		back_time.setSeconds(back_time.getSeconds() - DATA_LEN / 1000)
 		// console.log('ke:' + ke + ' back_time:' + back_time)
 		if (MARKERS_DATA.has(ke) && (new Date(ke)) < back_time)	{
 			MARKERS_DATA.delete(ke);
@@ -546,6 +548,12 @@ function markTexts()	{
 	return texts
 }
 
+var layout = {
+  yaxis: {
+    range: [-0.010, 0.010],
+  }
+};
+
 Plotly.newPlot('graph',
     [
         {
@@ -568,7 +576,7 @@ Plotly.newPlot('graph',
         },
         {
             mode: 'markers+text',
-            textposition: 'top',
+            textposition: 'left',
 			textfont: {
                 size: 15
             },
@@ -578,7 +586,8 @@ Plotly.newPlot('graph',
                 symbol: ['6']
             }
         }
-    ]
+    ],
+	layout
 );
 
 
@@ -592,7 +601,7 @@ setInterval(function() {
     Plotly.update(
         'graph',
         {
-            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, Array(markersArray.length).fill(0)],
+            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, Array(markersArray.length).fill(0.008)],
             x: [times, times, times, markersArray],
             text: [[], [], [], markTexts()]
         }
