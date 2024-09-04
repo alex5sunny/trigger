@@ -27,6 +27,11 @@ def angles_calc(lat1, long1, t1, lat2, long2, t2, lat3, long3, t3):
     (t1, lat1, long1), (t3, lat3, long3), (t2, lat2, long2) = \
         sorted(((t1, lat1, long1), (t2, lat2, long2), (t3, lat3, long3)))
 
+    if t1 == t2:
+        t1 -= timedelta(seconds=0.0001)
+    if t3 == t2:
+        t3 += timedelta(seconds=0.0001)
+
     lat1, lat2, lat3, long1, long2, long3 = \
         [lat_lon * math.pi / 180. for lat_lon in (lat1, lat2, lat3, long1, long2, long3)]
 
