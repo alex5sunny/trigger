@@ -102,6 +102,8 @@ function updateFunc () {
 						if (GRAPH_DATA[chan].length > DATA_LEN)	{
 							GRAPH_DATA[chan].splice(0, GRAPH_DATA[chan].length - DATA_LEN)
 						}
+						// var av = GRAPH_DATA[chan].reduce((su, a) => su + a, 0) / GRAPH_DATA[chan].length;
+						// GRAPH_DATA[chan] = GRAPH_DATA[chan].map(a=>a - av + 0.005*(1-i));
 					}
 				} else	{
 					console.log('response:' + xhr.responseText);
@@ -322,7 +324,7 @@ function apply()	{
 	for (var elementId of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3'])	{
 		setValue(elementId);
 	}
-
+	document.getElementById("graph").innerHTML = ''
 	document.getElementById('ruleTimes').innerHTML = '';
 
 	var xhr = new XMLHttpRequest();
@@ -586,8 +588,7 @@ Plotly.newPlot('graph',
                 symbol: ['6']
             }
         }
-    ],
-	layout
+    ]
 );
 
 
@@ -595,13 +596,22 @@ setInterval(function() {
     var times = genTimes(GRAPH_DATA.endtime, GRAPH_DATA.ch1.length)
     actualizeMarkers()
 	var markersArray = []
-	for (var t of Array.from(MARKERS_DATA.keys()))	{
+	for (var t of Array.from(MARKERS_DATA.keys()))    {
 		markersArray[markersArray.length] = new Date(t)
 	}
+	var max_val = Math.max(
+		Math.max(...GRAPH_DATA.ch1), Math.max(...GRAPH_DATA.ch2), Math.max(...GRAPH_DATA.ch3)
+	)
+	var data_show = structuredClone(GRAPH_DATA)
+	for (var [i, chan] of ['ch1', 'ch2', 'ch3'].entries()) {
+		var av = data_show[chan].reduce((su, a) => su + a, 0) / data_show[chan].length;
+		data_show[chan] = data_show[chan].map(a=>a - av + 0.5*max_val*(1-i));
+	}
+
     Plotly.update(
         'graph',
         {
-            y: [GRAPH_DATA.ch1, GRAPH_DATA.ch2, GRAPH_DATA.ch3, Array(markersArray.length).fill(0.008)],
+            y: [data_show.ch1, data_show.ch2, data_show.ch3, Array(markersArray.length).fill(0.008)],
             x: [times, times, times, markersArray],
             text: [[], [], [], markTexts()]
         }
