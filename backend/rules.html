@@ -96,11 +96,11 @@
 			<input id="lon3" inputmode="numeric" value="37.10795278" size="10"/>
 			<br/>
 			<label for="ch1">ch1:</label>
-			<input id="ch1" inputmode="numeric" value="1" size="2" style="margin-right: 50px;"/>
+			<input id="ch1" inputmode="numeric" value="1" size="2" style="margin-right: 50px;" oninput="this.value = this.value.replace(/\D+/g, '')"/>
 			<label for="ch2">ch2:</label>
-			<input id="ch2" inputmode="numeric" value="2" size="2" style="margin-right: 50px;"/>
+			<input id="ch2" inputmode="numeric" value="2" size="2" style="margin-right: 50px;" oninput="this.value = this.value.replace(/\D+/g, '')"/>
 			<label for="ch3">ch3:</label>
-			<input id="ch3" inputmode="numeric" value="3" size="2"/>
+			<input id="ch3" inputmode="numeric" value="3" size="2" oninput="this.value = this.value.replace(/\D+/g, '')"/>
 		</p>
 		<div id="graph" align="right"></div>
 		<p id="ruleTimes" align="left"/>
