@@ -60,9 +60,11 @@ def get_rules_settings():
         rules_dic[rule_id]['actions'] = [int(el.attrib['action_id'])
                                          for el in row[actions_col].iter()
                                          if 'selected' in el.attrib]
-    rules_settings = {'rules_dic': rules_dic, 'coords': {}}
+    rules_settings = {'rules_dic': rules_dic, 'coords': {}, 'chans': {}}
     for lat_lon in 'lat1 lon1 lat2 lon2 lat3 lon3'.split():
         rules_settings['coords'][lat_lon] = float(root.xpath(f"//*[@id='{lat_lon}']/@value")[0])
+    for ch in 'ch1 ch2 ch3'.split():
+        rules_settings['chans'][ch] = float(root.xpath(f"//*[@id='{ch}']/@value")[0])
     return rules_settings
 
 
