@@ -321,19 +321,17 @@ function apply()	{
     		setSelected(actionNode);
     	}
     }
-	for (var elementId of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3'])	{
-		setValue(elementId);
+	var objToSend = {}
+	for (var elementId of ['lat1', 'lon1', 'lat2', 'lon2', 'lat3', 'lon3', 'ch1', 'ch2', 'ch3'])	{
+		objToSend[elementId] = document.getElementById(elementId).value
 	}
-	document.getElementById("graph").innerHTML = ''
-	document.getElementById('ruleTimes').innerHTML = '';
 
 	var xhr = new XMLHttpRequest();
 	var url = "applyRules";
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-Type", "application/html");
 
-	var pageHTML = "<html>\n" + document.documentElement.innerHTML + "\n</html>";
-	var data = JSON.stringify({"html": pageHTML, "sessionId":  sessionId});
+	var data = JSON.stringify(objToSend);
 	xhr.send(data);
 	setTimeout(nullifyVals, 3000);
 }

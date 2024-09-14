@@ -117,9 +117,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 response_dic = {'apply': 1}
                 glob.restart = True
             if path == 'applyRules':
-                session_id = request_dic['sessionId']
-                html = request_dic['html']
-                save_rules(html)
+                save_rules(request_dic)
                 self.restarting = glob.restart = True
             if path == 'save':
                 session_id = request_dic['sessionId']
@@ -180,6 +178,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             actions_triggerings = []
 
             rules_settings = get_rules_settings()
+            glob.CHANS = list(rules_settings['chans'].values())
             rules_settings_dic = rules_settings['rules_dic']
             coords = rules_settings['coords']
 
