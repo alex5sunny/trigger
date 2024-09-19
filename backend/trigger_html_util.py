@@ -1,7 +1,9 @@
 import inspect
+import json
 import os
 from collections import defaultdict
 from copy import deepcopy
+from pathlib import Path
 
 from lxml import etree
 
@@ -60,11 +62,14 @@ def get_rules_settings():
         rules_dic[rule_id]['actions'] = [int(el.attrib['action_id'])
                                          for el in row[actions_col].iter()
                                          if 'selected' in el.attrib]
-    rules_settings = {'rules_dic': rules_dic, 'coords': {}}
-    for lat_lon in 'lat1 lon1 lat2 lon2 lat3 lon3'.split():
-        rules_settings['coords'][lat_lon] = float(root.xpath(f"//*[@id='{lat_lon}']/@value")[0])
-    for ch in 'ch1 ch2 ch3'.split():
-        rules_settings['chans'][ch] = 'ch' + root.xpath(f"//*[@id='{ch}']/@value")[0]
+    rules_settings = {'rules_dic': rules_dic, 'coords': {}, 'chans': {}}
+    with open(os.path.split(inspect.getfile(backend))[0] + '/rules.json', 'r') as fp:
+        settings_dict = defaultdict(int)
+        settings_dict.update(json.load(fp))
+        for lat_lon in 'lat1 lon1 lat2 lon2 lat3 lon3'.split():
+            rules_settings['coords'][lat_lon] = float(settings_dict[lat_lon])
+        for ch in 'ch1 ch2 ch3'.split():
+            rules_settings['chans'][ch] = int(settings_dict[ch])
     return rules_settings
 
 
@@ -226,11 +231,8 @@ def save_sources(post_data_str):
 
 
 def save_rules(settings_dic):
-    fpath = os.path.split(inspect.getfile(backend))[0] + '/rules.html'
-    root = etree.parse(fpath)
-    for element_id in 'lat1 lon1 lat2 lon2 lat3 lon3 ch1 ch2 ch3'.split():
-        root.xpath(f"//*[@id='{element_id}']")[0].attrib['value'] = str(settings_dic[element_id])
-    root.write(fpath)
+    with open(os.path.split(inspect.getfile(backend))[0] + '/rules.json', 'w') as fp:
+        json.dump(settings_dic, fp)
 
 
 def save_actions(post_data_str):

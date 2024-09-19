@@ -105,7 +105,8 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 params_list = getTriggerParams()
                 trigger_dic = {params['ind']: params['name'] for params in params_list}
                 response_dic = {'triggers': trigger_dic,
-                                'actions': deepcopy(action_names_dic0)}
+                                'actions': deepcopy(action_names_dic0),
+                                'chans': get_rules_settings()['chans']}
                 actions_dic = get_actions_settings()
                 # logger.debug(f'actions_dic:{actions_dic}')
                 sms_dic = {sms_id: actions_dic[sms_id]['name'] for sms_id in actions_dic
@@ -178,7 +179,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
             actions_triggerings = []
 
             rules_settings = get_rules_settings()
-            glob.CHANS = list(rules_settings['chans'].values())
+            glob.CHANS = [f'ch{i}' for i in rules_settings['chans'].values()]
             rules_settings_dic = rules_settings['rules_dic']
             coords = rules_settings['coords']
 

@@ -163,6 +163,12 @@ function initFunc () {
 			triggersDic = responseObj['triggers'];
 			actionsDic = responseObj['actions'];
 			console.log("actions dic:" + JSON.stringify(actionsDic));
+			var chansDic = responseObj['chans'];
+			for (var chan in chansDic)	{
+				var el = document.getElementById(chan)
+				el.innerHTML = chansDic[chan]
+				el.setAttribute('value', chansDic[chan])
+			}
 			var triggersIds = [];
 			for (triggerId in triggersDic)	{
 				triggersIds.push(triggerId);
