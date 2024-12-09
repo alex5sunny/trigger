@@ -9,6 +9,7 @@ from time import sleep
 
 import numpy as np
 from com_main_module import COMMON_MAIN_MODULE_CLASS
+from com_http import *
 from obspy import UTCDateTime
 
 sys.path.append(os.path.dirname(__file__))
@@ -44,33 +45,37 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
 
         config_params = {
             'config_file_name': 'trigger_module_cfg.json',
+            'default_config': {}
             # 'default_config': {'trigger_dir': '/var/lib/cloud9/trigger'}
         }
 
         web_ui_dir = os.path.join(os.path.dirname(__file__), "backend")
         # self._print('Initializing trigger module...')
-        super().__init__(standalone, config_params, njsp, logger_config, web_ui_dir=web_ui_dir)
+        module_path = os.path.dirname(__file__)
+        super().__init__(standalone, module_path,  config_params, njsp, logger_config)
         self.message = 'запускается...'
         config = self.get_config()
         # self._print('config:\n' + str(config) + '\n')
         self.restarting = False
         self.njsp = njsp
 
-    def custom_web_ui_request(self, in_data):
+    def custom_web_ui_request(self, parse_result, req_type, content):
         logger = glob.logger
-        path = in_data['path']  # .split('?')
+        path = parse_result.path  # .split('?')
         for ext in ['jpg', 'png', 'ico', 'gif']:
             if path.endswith('.' + ext):
                 f = open(self.web_ui_dir + os.sep + path, 'rb')
                 data = f.read()
                 f.close()
-                return {'binary_content': data, 'code': 200,
-                        'c_type': 'image/' + ext}
-        if in_data['type'] == 'post':
-            content = in_data['binary_content']
+                return WEB_UI_RESPONSE_GENERIC(200, data,'image/' + ext)
+                    #{'binary_content': data, 'code': 200, 'c_type': 'image/' + ext}
+        if req_type == 'POST':
+            path = os.path.split(path)[-1]
+            self.logger.debug(f'path:{path}')
             response_dic = {}
             if content and path not in ['saveSources', 'applyActions']:
                 request_dic = json.loads(content.decode())
+                self.logger.debug(f'request_dic:{request_dic}')
 
             if path == 'initTrigger':
                 response_dic = glob.sources
@@ -98,7 +103,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                                 'actions': deepcopy(action_names_dic0)}
                 actions_dic = get_actions_settings()
                 # logger.debug(f'actions_dic:{actions_dic}')
-                sms_dic = {sms_id: actions_dic[sms_id]['name'] for sms_id in actions_dic 
+                sms_dic = {sms_id: actions_dic[sms_id]['name'] for sms_id in actions_dic
                            if sms_id > 3}
                 # logger.debug(f'sms_dic:{sms_dic}')
                 response_dic['actions'].update(sms_dic)
@@ -130,8 +135,9 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
                 content = json.dumps(response_dic).encode()
             else:
                 content = b''
-            return {'binary_content': content, 'code': 200,
-                    'c_type': 'application/json'}
+            self.logger.debug(f'content:{content}')
+            return WEB_UI_RESPONSE_GENERIC(200, content, 'application/json')
+            # return {'binary_content': content, 'code': 200, 'c_type': 'application/json'}
 
     def main(self):
         workdir = os.path.dirname(__file__)
@@ -290,7 +296,7 @@ class MAIN_MODULE_CLASS(COMMON_MAIN_MODULE_CLASS):
 
             conns = list(streamers.values()) + list(readers.values())
             for conn in conns:
-                print(f'remove conn:{conn}')                
+                print(f'remove conn:{conn}')
                 self.njsp.remove(conn)
             while set(conns) & set(self.njsp.handles):
                 sleep(.1)
