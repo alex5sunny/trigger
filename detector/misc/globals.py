@@ -14,6 +14,8 @@ import os
 if os.name == 'nt':
     logpath = None  # os.path.dirname(os.path.dirname(os.path.dirname(__file__))) + '/trigger.log'
 else:
+    if not os.path.exists('/media/sdcard/logs/trigger'):
+        os.makedirs('/media/sdcard/logs/trigger')
     logpath = '/media/sdcard/logs/trigger/trigger.log'
 loglevel = logging.DEBUG
 
