@@ -25,25 +25,25 @@ def handle_data(trace):
 
 #client_us = create_client('rtserve.iris.washington.edu', on_data=handle_data)
 #client_fr = create_client('rtserver.ipgp.fr', on_data=handle_data)
-#client = create_client('192.168.0.178', on_data=handle_data)
-client = create_client('192.168.0.157', on_data=handle_data)
+client = create_client('192.168.7.2', on_data=handle_data)
+#client = create_client('192.168.0.157', on_data=handle_data)
 #client = create_client('81.26.81.45', on_data=handle_data)
-print(client.get_info('streams'))
+#print(client_fr.get_info('streams'))
 #exit(1)
 print()
-print(client.get_info('ALL'))
+#print(client_fr.get_info('ALL'))
 #exit(1)
 print()
 #print(client_fr.get_info('streams'))
 #print()
-#print(client_fr.get_info('ALL'))
+print(client.get_info('ALL'))
 
 
 #client_us.select_stream('IU', 'ANMO', 'BH?')
-#client_fr.select_stream('RU', 'DEVA', 'CH?')
+#client_fr.select_stream('WI', 'TDBA', 'HH?')
 #client.select_stream('KS', 'SHAR', 'S2?')
-#client.select_stream('RU', 'ND01', 'CH?')
-client.select_stream('RU', 'NADC', 'CH?')
+client.select_stream('XX', 'ND01', 'DN?')
+#client.select_stream('RU', 'NADC', 'CH?')
 #client.select_stream('RU', 'ND14', 'C??')
 #client.select_stream('RU', 'NADC', 'CH?')
 
@@ -59,8 +59,8 @@ def f_receiver():
     client.run()
 
 
-# Thread(target=f_receiver_fr).start()
 Thread(target=f_receiver).start()
+# Thread(target=f_receiver).start()
 
 
 while True:
